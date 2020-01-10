@@ -1,0 +1,16 @@
+name: hmm
+channels:
+  - defaults
+dependencies:
+  - pip=19.3.1
+  - python=3.7.6
+  - pip:
+    - jupyter==1.0.0
+    - numpy==1.18.1
+    - pandas==0.25.3
+    - scikit-learn==0.21.3
+    - scipy==1.4.1
+    - snorkel==0.9.3
+    - torch==1.1.0.post2
+prefix: /Users/steed/miniconda3/envs/hmm
+
