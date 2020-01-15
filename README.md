@@ -10,3 +10,9 @@ The data: https://osf.io/3hvt2/?view_only=4bb49492edee4a8eb1758552a362a2cf
 
 Looking for "reference data from 1,303,778 voters, amounting to a total of 18,254,285 pairwise comparisons" as in https://arxiv.org/pdf/1709.06692.pdf
 
+Recommended: convert data into a SQLite db locally by doing the following:
+```
+sqlite> .mode csv
+sqlite> .import path/to/db path/to/SharedResponses.csv sharedresponses
+```
+

@@ -56,7 +56,7 @@ What are differences between Snorkel and this model?
 > + SME expertise may not compensate for lower sample size
 > + Labeling function may have less coverage than direct surveying - maybe people's heuristics differ from their actual behavior (do we trust experts to not have this quirk?)
 > + May be impossible to prove if this is working - how to prove labeling functions are honored?
-> + The requirements for being an SME labeler exclude certain groups from being able to provide input: "The profile of the best performing user by F1 score was a MS or Ph.D. degree in any field, strong Python coding skills, and intermediate to advanced experience with machine learning" (Snorkel). How to make this accessible to lower-educated, non Python coders?
+> + The requirements for being an SME labeler exclude certain groups from being able to provide input: The profile of the best performing user by F1 score was a MS or Ph.D. degree in any field, strong Python coding skills, and intermediate to advanced experience with machine learning (Snorkel). How to make this accessible to lower-educated, non Python coders?
 - How much will it cost?
 > + Time
 > + Data costs??
@@ -205,13 +205,26 @@ Might be able to ask again if desperate
 
 Central problem: I think the MM study could have been conducted without knowing the alternatives as pairs - but how could the Noothigattu study have been conducted?
 
-BREAKTHROUGH: 
+BREAKTHROUGH: random sample works for finding repeated response IDs, passes the eye test
+
+### SQLite implementation
+Now creating a SQL table to hold all data to make querying faster:
+```
+sqlite> .mode csv
+sqlite> .import /Users/steed/heuristic-moral-machine/data/moralmachine/SharedResponses.csv sharedresponses
+```
+
+Double checking no data loss/gain
+Originally 70332356 lines, including header
+SQLLite reports 70332355
+Perfect!
 
 TODO
 ! Obtain kidney exchange data
-- Figure out what MM fields mean
-    + Try to find common session/response IDs - this is the most likely matching element (does the negative sign mean something?)
+<!-- - Figure out what MM fields mean -->
+    <!-- + Try to find common session/response IDs - this is the most likely matching element (does the negative sign mean something?) -->
     <!-- + Try loading a random sample of the entire dataset - maybe responses are scattered so much that the common IDs can't be found - best way would be to host an SQL db (SQLAlchemy, perhaps - to integrate with Snorkel) -->
+- Transition data to SQLLite for easier querying
 - Create a working example with Snorkel
 - Replicate some other models for a baseline
     + Kim et al.
