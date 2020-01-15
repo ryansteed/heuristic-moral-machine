@@ -178,13 +178,40 @@ Cat
 
 ---
 
+starting to think intervention might be the target; sorted by whether intervened or not
+
+looks like only 1 of 13 sessions was totally randomized - so what data was Noothigattu using?
+
+New theory - each row is one card, and `Saved` is whether that card was chosen; but how to tell which cards were being compared? no obvious session ID or pointer
+
+but it seems impossible that each card has its own row! since each row seems like it should be the answer! only possible answer is that they didn't include the other alternative in the data? or not? fuck me, man
+
+need to find an example where it would have been necessary for the coders to know both alternatives at once
+
+maybe this information isn't available... did Noothigattu use this? is it necessary to know? for labeling functions it is...
+
+Ending with: the answer must lie in Noothigattu's paper... if necessary, contact him (did he ever actually use pairwise alternative comparisons - or am I misunderstanding?)
+
+- Figure out what MM fields mean
+    <!-- + Get all possible values for each field -->
+        <!-- * Try first on SharedResponses -->
+        <!-- * Then compare to SharedResponsesFullFirstSession -->
+    <!-- ~ Try to view just one user, one session, all 13 pairwise choices for a randomized session -->
+
+## 15 Jan 20
+
+Received a response - no help, but answered a single question
+Might be able to ask again if desperate
+
+Central problem: I think the MM study could have been conducted without knowing the alternatives as pairs - but how could the Noothigattu study have been conducted?
+
+BREAKTHROUGH: 
+
 TODO
 ! Obtain kidney exchange data
 - Figure out what MM fields mean
-    + Get all possible values for each field
-        * Try first on SharedResponses
-        * Then compare to SharedResponsesFullFirstSession
-    + Try to view just one user, one session, all 13 pairwise choices for a randomized session
+    + Try to find common session/response IDs - this is the most likely matching element (does the negative sign mean something?)
+    <!-- + Try loading a random sample of the entire dataset - maybe responses are scattered so much that the common IDs can't be found - best way would be to host an SQL db (SQLAlchemy, perhaps - to integrate with Snorkel) -->
 - Create a working example with Snorkel
 - Replicate some other models for a baseline
     + Kim et al.
