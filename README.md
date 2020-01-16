@@ -4,15 +4,10 @@ Attempting to train moral algorithms with ethical/legal heuristic functions to b
 
 
 ## Data
-Use data from http://moralmachine.mit.edu/ experiment
-
-The data: https://osf.io/3hvt2/?view_only=4bb49492edee4a8eb1758552a362a2cf
-
-Looking for "reference data from 1,303,778 voters, amounting to a total of 18,254,285 pairwise comparisons" as in https://arxiv.org/pdf/1709.06692.pdf
+Using [published data](https://osf.io/3hvt2/?view_only=4bb49492edee4a8eb1758552a362a2cf) from [Moral Machine](http://moralmachine.mit.edu/) experiment.
 
 Recommended: convert data into a SQLite db locally by doing the following:
 ```
 sqlite> .mode csv
 sqlite> .import path/to/db path/to/SharedResponses.csv sharedresponses
 ```
-

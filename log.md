@@ -219,13 +219,25 @@ Originally 70332356 lines, including header
 SQLLite reports 70332355
 Perfect!
 
+Used https://www.sqlitetutorial.net/sqlite-import-csv/
+
+
+Fixing the schema using https://www.sqlite.org/lang_altertable.html
+
+CREATE TABLE sharedresponses_strict(ResponseID TEXT, ExtendedSessionID TEXT, UserID TEXT, ScenarioOrder INT, Intervention INT, PedPed INT, Barrier INT, CrossingSignal INT, AttributeLevel TEXT, ScenarioTypeStrict TEXT, ScenarioType TEXT, DefaultChoice TEXT, NonDefaultChoice TEXT, DefaultChoiceIsOmission INT, NumberOfCharacters INT, DiffNumberOFCharacters INT, Saved INT, Template TEXT, DescriptionShown INT, LeftHand INT, UserCountry3 TEXT, Man INT, Woman INT, Pregnant INT, Stroller INT, OldMan INT, OldWoman INT, Boy INT, Girl INT, Homeless INT, LargeWoman INT, LargeMan INT, Criminal INT, MaleExecutive INT, FemaleExecutive INT, FemaleAthlete INT, MaleAthlete INT, FemaleDoctor INT, MaleDoctor INT, Dog INT, Cat INT);
+
+Still reports COUNT 70332355
+
 TODO
 ! Obtain kidney exchange data
 <!-- - Figure out what MM fields mean -->
     <!-- + Try to find common session/response IDs - this is the most likely matching element (does the negative sign mean something?) -->
     <!-- + Try loading a random sample of the entire dataset - maybe responses are scattered so much that the common IDs can't be found - best way would be to host an SQL db (SQLAlchemy, perhaps - to integrate with Snorkel) -->
-- Transition data to SQLLite for easier querying
+<!-- ~ Transition data to SQLLite for easier querying -->
+    <!-- + Create indices -->
 - Create a working example with Snorkel
+    + Figure out how to SQL query the responses in pairs - debugging
+    + 
 - Replicate some other models for a baseline
     + Kim et al.
     + Nootigatthu et al.
