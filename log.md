@@ -252,11 +252,24 @@ TODO
 ! Obtain kidney exchange data
 - Create a working example with Snorkel
     <!-- + Figure out how to SQL query the responses in pairs - debugging -->
-    + Draft some labeling functions from the effect sizes in the paper
-    + Test with Snorkel analysis example - https://www.snorkel.org/use-cases/01-spam-tutorial#4-combining-labeling-function-outputs-with-the-label-model
+    + Draft some labeling functions from the effect sizes in the MM paper (highlighted in purple in Mendeley - https://www.mendeley.com/viewer/?fileId=3b917119-bbe5-3ee3-7969-b7991da2abf7&documentId=f71b5d60-0d88-323a-a078-960daa3a63c5)
+        * Heuristics to spare the four most spared characters: baby, little girl, little boy, pregnant woman
+        * Heuristic to save most *human* lives
+        * Heuristic to save most *pet* lives
+        * Heuristics to prefer:
+            - inaction
+            - pedestrians
+            - females
+            - the fit
+            - higher status (rich)
+            - lawful
+            - young
+    + Test with Snorkel analysis example - https://www.snorkel.org/use-cases/01-spam-tutorial#4-combining-labeling-function-outputs-with-the-label-model, try tuning the fxns
+    + Figure out a way to weight the strength of each heuristic? Would probably improve performance
 - Replicate some other models for a baseline
     + Kim et al.
     + Nootigatthu et al.
+- Find more ethical algorithm use cases in the literature - maybe start with that one ethical alg lit review with the collective/individual taxonomy
 
 
 - (Hard) Decide how to prove this method is better, not just comparable
