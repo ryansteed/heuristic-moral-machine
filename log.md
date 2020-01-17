@@ -248,22 +248,53 @@ Log:
 Managed to write some labeling functions! and did some preliminary analysis
 Using https://www.snorkel.org/use-cases/01-spam-tutorial#4-combining-labeling-function-outputs-with-the-label-model
 
+- Create a working example with Snorkel
+    <!-- + Figure out how to SQL query the responses in pairs - debugging -->
+
+## 17 Jan 20
+Index(['ExtendedSessionID', 'UserID', 'ScenarioOrder', 'Intervention',
+       'PedPed', 'CrossingSignal', 'AttributeLevel', 'ScenarioTypeStrict',
+       'ScenarioType', 'DefaultChoice', 'NonDefaultChoice',
+       'DefaultChoiceIsOmission', 'Template', 'UserCountry3', 'Barrier_int',
+       'NumberOfCharacters_int', 'DiffNumberOFCharacters_int',
+       'DescriptionShown_int', 'LeftHand_int', 'Man_int', 'Woman_int',
+       'Pregnant_int', 'Stroller_int', 'OldMan_int', 'OldWoman_int', 'Boy_int',
+       'Girl_int', 'Homeless_int', 'LargeWoman_int', 'LargeMan_int',
+       'Criminal_int', 'MaleExecutive_int', 'FemaleExecutive_int',
+       'FemaleAthlete_int', 'MaleAthlete_int', 'FemaleDoctor_int',
+       'MaleDoctor_int', 'Dog_int', 'Cat_int', 'Barrier_noint',
+       'NumberOfCharacters_noint', 'DiffNumberOFCharacters_noint',
+       'DescriptionShown_noint', 'LeftHand_noint', 'Man_noint', 'Woman_noint',
+       'Pregnant_noint', 'Stroller_noint', 'OldMan_noint', 'OldWoman_noint',
+       'Boy_noint', 'Girl_noint', 'Homeless_noint', 'LargeWoman_noint',
+       'LargeMan_noint', 'Criminal_noint', 'MaleExecutive_noint',
+       'FemaleExecutive_noint', 'FemaleAthlete_noint', 'MaleAthlete_noint',
+       'FemaleDoctor_noint', 'MaleDoctor_noint', 'Dog_noint', 'Cat_noint'],
+      dtype='object')
+
+
+Do the labeling functions have to be mostly accurate??? Hopefully not...
+
 TODO
 ! Obtain kidney exchange data
 - Create a working example with Snorkel
-    <!-- + Figure out how to SQL query the responses in pairs - debugging -->
     + Draft some labeling functions from the effect sizes in the MM paper (highlighted in purple in Mendeley - https://www.mendeley.com/viewer/?fileId=3b917119-bbe5-3ee3-7969-b7991da2abf7&documentId=f71b5d60-0d88-323a-a078-960daa3a63c5)
-        * Heuristics to spare the four most spared characters: baby, little girl, little boy, pregnant woman
-        * Heuristic to save most *human* lives
-        * Heuristic to save most *pet* lives
-        * Heuristics to prefer:
-            - inaction
-            - pedestrians
-            - females
-            - the fit
-            - higher status (rich)
-            - lawful
-            - young
+        <!-- * Heuristic to save most lives -->
+        <!-- * Heuristics to spare the four most spared characters: baby, little girl, little boy, pregnant woman -->
+        <!-- * Heuristic to save most *human* lives -->
+        <!-- * Heuristics to prefer: -->
+            <!-- - inaction -->
+            <!-- - pedestrians -->
+            <!-- - females -->
+            <!-- - the fit -->
+            <!-- - rich -->
+            <!-- - lawful (crossing-wise) -->
+            <!-- - young -->
+        <!-- * Heuristics not to prefer: -->
+            <!-- - criminals -->
+            <!-- - homeless -->
+            <!-- - Pets -->
+    + Debug labeling functions - write unit tests
     + Test with Snorkel analysis example - https://www.snorkel.org/use-cases/01-spam-tutorial#4-combining-labeling-function-outputs-with-the-label-model, try tuning the fxns
     + Figure out a way to weight the strength of each heuristic? Would probably improve performance
 - Replicate some other models for a baseline

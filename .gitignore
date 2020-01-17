@@ -1,3 +1,4 @@
 data/*
 jupyter/.ipynb_checkpoints
 .Rproj.user
+hmm-app/__pycache__
