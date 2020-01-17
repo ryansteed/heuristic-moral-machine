@@ -228,16 +228,32 @@ CREATE TABLE sharedresponses_strict(ResponseID TEXT, ExtendedSessionID TEXT, Use
 
 Still reports COUNT 70332355
 
-TODO
-! Obtain kidney exchange data
 <!-- - Figure out what MM fields mean -->
     <!-- + Try to find common session/response IDs - this is the most likely matching element (does the negative sign mean something?) -->
     <!-- + Try loading a random sample of the entire dataset - maybe responses are scattered so much that the common IDs can't be found - best way would be to host an SQL db (SQLAlchemy, perhaps - to integrate with Snorkel) -->
 <!-- ~ Transition data to SQLLite for easier querying -->
     <!-- + Create indices -->
+
+## 16 Jan 19
+
+Starting to see some problems:
+- There aren't enough heuristic functions to write here! This example is too simplistic (there aren't enough features to write sophisticated heuristics).
+- Even if I get some experts to give me heuristics, they'll 1) be simple, 2) be too if- based and have high coverage (more rules-based), 3) be hard to compare to Noothigattu because so different than the MM audience
+
+Things we might still be able to demonstrate:
+- Ability of machine learning approach to generalize beyond experts' heuristics - provide a limited set of heuristics, then still achieve comparable performance.
+- A good goal: create some example where similar effect sizes to MM arise. A good strategy might be modeling several ethical camps and writing competing heuristic functions from the perspective of experts from these camps.
+
+Log:
+Managed to write some labeling functions! and did some preliminary analysis
+Using https://www.snorkel.org/use-cases/01-spam-tutorial#4-combining-labeling-function-outputs-with-the-label-model
+
+TODO
+! Obtain kidney exchange data
 - Create a working example with Snorkel
-    + Figure out how to SQL query the responses in pairs - debugging
-    + 
+    <!-- + Figure out how to SQL query the responses in pairs - debugging -->
+    + Draft some labeling functions from the effect sizes in the paper
+    + Test with Snorkel analysis example - https://www.snorkel.org/use-cases/01-spam-tutorial#4-combining-labeling-function-outputs-with-the-label-model
 - Replicate some other models for a baseline
     + Kim et al.
     + Nootigatthu et al.
