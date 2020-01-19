@@ -1,0 +1,314 @@
+import unittest
+from labeling_functions import *
+import pandas as pd
+
+"""
+TODO
+
+write all the test cases by adding example dicts to the sample dataframe
+then go through and manually label with each function for each pairwise comparison
+for each unit test, check the actual output against the gold standard
+
+intervene => save characters with suffix int
+don't intervene => save characters with suffix noint
+"""
+# don't intervene
+SAVE_NOINT = NOINT = 0
+# intervene
+SAVE_INT = INT = 1
+# abstain
+ABSTAIN = -1
+
+class LabelingFunctionTestCase(unittest.TestCase):
+	"""
+	Note: A response of 0 indicates that the user chooses not to interfere, thus saving 
+	the characters with suffix _noint. A response of 1 indicates the user chooses to interfere, 
+	thus saving the characters with suffix _int. A response of -1 indicates abstention.
+	"""
+	def setUp(self):
+		np.random.seed(1)
+
+	def test_doctors(self):
+		self.assertEqual(SAVE_NOINT, doctors(self.generate_df_random({
+			"MaleDoctor_int": 0, 
+			"MaleDoctor_noint": 1, 
+			"FemaleDoctor_int": 1,
+			"FemaleDoctor_noint": 1
+		})))
+		self.assertEqual(SAVE_INT, doctors(self.generate_df_random({
+			"MaleDoctor_int": 2, 
+			"MaleDoctor_noint": 1, 
+			"FemaleDoctor_int": 3,
+			"FemaleDoctor_noint": 1
+		})))
+		self.assertEqual(ABSTAIN, doctors(self.generate_df_null()))
+
+	def test_utilitarian(self):
+		self.assertEqual(SAVE_NOINT, utilitarian(self.generate_df_random({
+			"NumberOfCharacters_int": 0,
+			"NumberOfCharacters_noint": 1
+		})))
+		self.assertEqual(SAVE_INT, utilitarian(self.generate_df_random({
+			"NumberOfCharacters_int": 2,
+			"NumberOfCharacters_noint": 1
+		})))
+		self.assertEqual(ABSTAIN, utilitarian(self.generate_df_random({
+			"NumberOfCharacters_int": 0,
+			"NumberOfCharacters_noint": 0
+		})))
+
+	def test_utilitarian_anthro(self):
+		self.assertEqual(ABSTAIN, utilitarian_anthro(self.generate_df_null({"Dog_int": 2})))
+		self.assertEqual(SAVE_INT, utilitarian_anthro(self.generate_df_null({"Boy_int": 2})))
+		self.assertEqual(SAVE_NOINT, utilitarian_anthro(self.generate_df_null({
+			"FemaleAthlete_int": 1,
+			"MaleExecutive_noint": 2
+		})))
+
+	def test_inaction(self):
+		for i in range(3):
+			self.assertEqual(SAVE_NOINT, inaction(self.generate_df_random()))
+
+	def test_pedestrians(self):
+		self.assertEqual(SAVE_NOINT, pedestrians(self.generate_df_random({
+			"Barrier_int": 0,
+			"Barrier_noint": 1
+		})))
+		self.assertEqual(SAVE_INT, pedestrians(self.generate_df_random({
+			"Barrier_int": 1,
+			"Barrier_noint": 0
+		})))
+		self.assertEqual(ABSTAIN, pedestrians(self.generate_df_random({
+			"Barrier_int": 0,
+			"Barrier_noint": 0
+		})))
+		self.assertEqual(ABSTAIN, pedestrians(self.generate_df_random({
+			"Barrier_int": 1,
+			"Barrier_noint": 1
+		})))
+
+	def test_females(self):
+		self.assertEqual(SAVE_INT, females(self.generate_df_null({
+			"Girl_int": 2
+		})))
+		self.assertEqual(SAVE_NOINT, females(self.generate_df_null({
+			"Girl_int": 2,
+			"Girl_noint": 3
+		})))
+		self.assertEqual(ABSTAIN, females(self.generate_df_null()))
+ 
+	def test_fitness(self):
+		self.assertEqual(ABSTAIN, fitness(self.generate_df_random({
+			"MaleAthlete_int": 1,
+			"FemaleAthlete_int": 0,
+			"LargeMan_int": 0,
+			"LargeWoman_int": 1,
+			"MaleAthlete_noint": 0,
+			"FemaleAthlete_noint": 1,
+			"LargeMan_noint": 1,
+			"LargeWoman_noint": 0
+		})))
+		self.assertEqual(SAVE_INT, fitness(self.generate_df_null({
+			"MaleAthlete_int": 1,
+			"FemaleAthlete_int": 1,
+			"LargeWoman_int": 1,
+			"FemaleAthlete_noint": 1,
+			"LargeMan_noint": 1,
+			"LargeWoman_noint": 1
+		})))
+		self.assertEqual(SAVE_NOINT, fitness(self.generate_df_null({
+			"LargeWoman_int": 1
+		})))
+		self.assertEqual(ABSTAIN, fitness(self.generate_df_null()))
+
+	def test_status(self):
+		self.assertEqual(ABSTAIN, status(self.generate_df_null({
+			"MaleExecutive_int": 2,
+			"FemaleExecutive_noint": 2
+		})))
+		self.assertEqual(SAVE_INT, status(self.generate_df_null({
+			"MaleExecutive_int": 2
+		})))
+		self.assertEqual(SAVE_NOINT, status(self.generate_df_null({
+			"FemaleExecutive_noint": 2
+		})))
+		self.assertEqual(ABSTAIN, status(self.generate_df_null()))
+
+	def test_legal(self):
+		self.assertEqual(ABSTAIN, legal(self.generate_df_random({
+			"CrossingSignal": 0,
+			"Barrier_noint": 0,
+			"Barrier_int": 0
+		})))
+		self.assertEqual(ABSTAIN, legal(self.generate_df_random({
+			"CrossingSignal": 2,
+			"Barrier_noint": 0,
+			"Barrier_int": 0
+		})))
+		self.assertEqual(INT, legal(self.generate_df_random({
+			"CrossingSignal": 1,
+			"Barrier_noint": 0,
+			"Barrier_int": 1
+		})))
+		self.assertEqual(NOINT, legal(self.generate_df_random({
+			"CrossingSignal": 1,
+			"Barrier_int": 0,
+			"Barrier_noint": 1
+		})))
+
+	def test_illegal(self):
+		self.assertEqual(ABSTAIN, illegal(self.generate_df_random({
+			"CrossingSignal": 0,
+			"Barrier_noint": 0,
+			"Barrier_int": 0
+		})))
+		self.assertEqual(ABSTAIN, illegal(self.generate_df_random({
+			"CrossingSignal": 1,
+			"Barrier_noint": 0,
+			"Barrier_int": 0
+		})))
+		self.assertEqual(NOINT, illegal(self.generate_df_random({
+			"CrossingSignal": 2,
+			"Barrier_noint": 0,
+			"Barrier_int": 1
+		})))
+		self.assertEqual(INT, illegal(self.generate_df_random({
+			"CrossingSignal": 2,
+			"Barrier_int": 0,
+			"Barrier_noint": 1
+		})))
+
+	def test_youth(self):
+		self.assertEqual(ABSTAIN, youth(self.generate_df_null()))
+		self.assertEqual(SAVE_INT, youth(self.generate_df_null({
+			"Boy_int": 2,
+			"Girl_noint": 1
+		})))
+		self.assertEqual(SAVE_NOINT, youth(self.generate_df_null({
+			"Stroller_int": 1,
+			"Pregnant_noint": 2
+		})))
+
+	def test_criminals(self):
+		# neither group is only composed of criminals
+		self.assertEqual(ABSTAIN, criminals(self.generate_df_null({
+			"MaleAthlete_int": 1,
+			"LargeWoman_noint": 1,
+			"Criminal_int": 3,
+			"Criminal_noint": 3,
+			"NumberOfCharacters_noint": 4,
+			"NumberOfCharacters_int": 4
+		})))
+		self.assertEqual(SAVE_INT, criminals(self.generate_df_null({
+			"MaleAthlete_int": 1,
+			"Criminal_int": 3,
+			"Criminal_noint": 3,
+			"NumberOfCharacters_noint": 3,
+			"NumberOfCharacters_int": 4
+		})))
+		self.assertEqual(SAVE_NOINT, criminals(self.generate_df_null({
+			"MaleAthlete_noint": 1,
+			"Criminal_int": 3,
+			"Criminal_noint": 3,
+			"NumberOfCharacters_int": 3,
+			"NumberOfCharacters_noint": 4
+		})))
+
+	def test_homeless(self):
+		# neither group is only composed of homeless
+		self.assertEqual(ABSTAIN, homeless(self.generate_df_null({
+			"MaleAthlete_int": 1,
+			"LargeWoman_noint": 1,
+			"Homeless_int": 3,
+			"Homeless_noint": 3,
+			"NumberOfCharacters_noint": 4,
+			"NumberOfCharacters_int": 4
+		})))
+		self.assertEqual(SAVE_INT, homeless(self.generate_df_null({
+			"MaleAthlete_int": 1,
+			"Homeless_int": 3,
+			"Homeless_noint": 3,
+			"NumberOfCharacters_noint": 3,
+			"NumberOfCharacters_int": 4
+		})))
+		self.assertEqual(SAVE_NOINT, homeless(self.generate_df_null({
+			"MaleAthlete_noint": 1,
+			"Homeless_int": 3,
+			"Homeless_noint": 3,
+			"NumberOfCharacters_int": 3,
+			"NumberOfCharacters_noint": 4
+		})))
+
+	def test_pets(self):
+		# neither group is only composed of pets
+		self.assertEqual(ABSTAIN, pets(self.generate_df_null({
+			"MaleAthlete_int": 1,
+			"LargeWoman_noint": 1,
+			"Dog_int": 3,
+			"Cat_noint": 3,
+			"NumberOfCharacters_noint": 4,
+			"NumberOfCharacters_int": 4
+		})))
+		self.assertEqual(SAVE_INT, pets(self.generate_df_null({
+			"MaleAthlete_int": 1,
+			"Dog_int": 3,
+			"Cat_noint": 3,
+			"NumberOfCharacters_noint": 3,
+			"NumberOfCharacters_int": 4
+		})))
+		self.assertEqual(SAVE_NOINT, pets(self.generate_df_null({
+			"MaleAthlete_noint": 1,
+			"Dog_int": 3,
+			"Cat_noint": 3,
+			"NumberOfCharacters_int": 3,
+			"NumberOfCharacters_noint": 4
+		})))
+
+	def test_spare_group(self):
+		# using strollers as an example
+		self.assertEqual(ABSTAIN, spare_strollers(self.generate_df_null()))
+		self.assertEqual(ABSTAIN, spare_strollers(self.generate_df_random({
+			"Stroller_int": 1,
+			"Stroller_noint": 2
+		})))
+		self.assertEqual(SAVE_INT, spare_strollers(self.generate_df_random({
+			"Stroller_int": 1,
+			"Stroller_noint": 0
+		})))
+		self.assertEqual(SAVE_NOINT, spare_strollers(self.generate_df_random({
+			"Stroller_int": 0,
+			"Stroller_noint": 2
+		})))
+
+
+#    labeling_functions.illegal,
+#    labeling_functions.youth,
+#    labeling_functions.criminals,
+#    labeling_functions.homeless,
+#    labeling_functions.pets,
+#    labeling_functions.spare_strollers,
+#    labeling_functions.spare_girl,
+#    labeling_functions.spare_boy,
+#    labeling_functions.spare_pregnant
+
+
+	@staticmethod
+	def generate_df_null(subdict={}):
+		return LabelingFunctionTestCase.df_from_dict({
+			'{}_{}'.format(c, s): 0 for c in characters_all for s in ["int", "noint"]
+		}, subdict)
+
+	@staticmethod
+	def generate_df_random(subdict={}):
+		return LabelingFunctionTestCase.df_from_dict({
+			'{}_{}'.format(c, s): np.random.randint(5) for c in characters_all for s in ["int", "noint"]
+		}, subdict)
+
+	@staticmethod
+	def df_from_dict(d, subd):
+		d.update(subd)
+		return pd.DataFrame([d]).iloc[0]
+
+
+if __name__ == "__main__":
+	unittest.main()
