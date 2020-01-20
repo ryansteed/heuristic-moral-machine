@@ -238,6 +238,7 @@ Still reports COUNT 70332355
 
 Starting to see some problems:
 - There aren't enough heuristic functions to write here! This example is too simplistic (there aren't enough features to write sophisticated heuristics).
+  + UPDATE 20 Jan 20 - this problem is mostly solved
 - Even if I get some experts to give me heuristics, they'll 1) be simple, 2) be too if- based and have high coverage (more rules-based), 3) be hard to compare to Noothigattu because so different than the MM audience
 
 Things we might still be able to demonstrate:
@@ -303,11 +304,28 @@ Do the labeling functions have to be mostly accurate??? Hopefully not...
 
 
 ### Williams meet tomorrow
+- Run through Heilmeier's catechism, roughly.
 - Lay out methods/results so far
-- Ask about the measurement problem
+  + Obtained MoralMachine data - pairwise alternatives
+  + Wrote labeling functions
+  + Built label aggregator - got labels, aggregated
+    * Labeling model 66.9% accurate when compared with human voters
+  + Built machine learning model on top of regular data, label aggregator, compared performance
+    * 90% accuracy with ML model trained on gold labels
+    * 66.7% accuracy with ML model trained on label model
+- Some concerns:
+  + The measurement problem
+    * How to empirically prove this method is better? Is that necessary?
+      - How does Noothigattu do it?
+      - Snorkel does it just by comparing accuracy/f1 score to hand labeled data - we've done that already
+      - Easy to say that this method achieves the same for much less cost; harder to say that this method produces more moral outcomes
+  + The case study
+    * Inherently problematic - disputed usefulness
+    * Too simple?? Snorkel usually works more dramatically with text data, 
 - Lay out future steps
-  + Survey of real experts for a use case
+  + Figure out how to prove supermorality
   + Same methods, kidney exchange use case - almost better because respondents included their rationales
+  + Survey of real experts for a use case
 
 
 TODO
@@ -316,6 +334,7 @@ TODO
 - Create a working example with Snorkel
     <!-- + Train a simple ML model on outputted labels and test final performance! -->
     + Hand-verify each step in exploration file - passes the eye test?
+    + Figure out why the LabelModel vote accuracy is so low - this accoutns for nearly all of hte ML model perofrmance
     + Set up a better test environment (full Python) for grid searching models / LF inclusion / hyperparameters
     + Try tuning the fxns for better performance
     + Figure out a way to weight the strength of each heuristic? Would probably improve performance
@@ -325,7 +344,7 @@ TODO
     + Nootigatthu et al.
 - Find more ethical algorithm use cases in the literature - maybe start with that one ethical alg lit review with the collective/individual taxonomy
 
-
+- (Bonus) Compare effect sizes in label model to effect sizes in MM paper
 - (Hard) Decide how to prove this method is better, not just comparable
 - (Hard) Design an experiment to actually gather heuristics from experts for one of the case studies 
     + try to demonstrate that the method works by asking SMEs, instead of just making up heuristics that get a good performance 
