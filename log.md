@@ -295,11 +295,16 @@ Do the labeling functions have to be mostly accurate??? Hopefully not...
 
 ## 19 Jan 20
 
+    <!-- ~ Debug labeling functions - write unit tests -->
+    <!-- + Continue with Snorkel analysis example - https://www.snorkel.org/use-cases/01-spam-tutorial#4-combining-labeling-function-outputs-with-the-label-model -->
+        <!-- * Finish the labeler (generative model) - get single label for whole test set -->
+
+
 TODO
 ! Obtain kidney exchange data
 - Create a working example with Snorkel
-    ~ Debug labeling functions - write unit tests
-    + Test with Snorkel analysis example - https://www.snorkel.org/use-cases/01-spam-tutorial#4-combining-labeling-function-outputs-with-the-label-model, try tuning the fxns
+    + Train a simple ML model on outputted labels and test final performance!
+    + Try tuning the fxns
     + Figure out a way to weight the strength of each heuristic? Would probably improve performance
 - Replicate some other models for a baseline
     + Kim et al.

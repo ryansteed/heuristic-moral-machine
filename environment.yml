@@ -13,5 +13,6 @@ dependencies:
     - snorkel==0.9.3
     - torch==1.1.0
     - sqlalchemy==1.3.12
+    - keras==2.3.0
 prefix: /Users/steed/miniconda3/envs/hmm
 
