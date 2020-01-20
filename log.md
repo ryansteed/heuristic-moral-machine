@@ -299,13 +299,27 @@ Do the labeling functions have to be mostly accurate??? Hopefully not...
     <!-- + Continue with Snorkel analysis example - https://www.snorkel.org/use-cases/01-spam-tutorial#4-combining-labeling-function-outputs-with-the-label-model -->
         <!-- * Finish the labeler (generative model) - get single label for whole test set -->
 
+## 20 Jan 20
+
+
+### Williams meet tomorrow
+- Lay out methods/results so far
+- Ask about the measurement problem
+- Lay out future steps
+  + Survey of real experts for a use case
+  + Same methods, kidney exchange use case - almost better because respondents included their rationales
+
 
 TODO
-! Obtain kidney exchange data
+<!-- ! Obtain kidney exchange data -->
+- Prep for Williams meet
 - Create a working example with Snorkel
-    + Train a simple ML model on outputted labels and test final performance!
-    + Try tuning the fxns
+    <!-- + Train a simple ML model on outputted labels and test final performance! -->
+    + Hand-verify each step in exploration file - passes the eye test?
+    + Set up a better test environment (full Python) for grid searching models / LF inclusion / hyperparameters
+    + Try tuning the fxns for better performance
     + Figure out a way to weight the strength of each heuristic? Would probably improve performance
+- Replicate for the kidney exchange problem
 - Replicate some other models for a baseline
     + Kim et al.
     + Nootigatthu et al.
