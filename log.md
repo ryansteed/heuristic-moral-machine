@@ -302,6 +302,15 @@ Do the labeling functions have to be mostly accurate??? Hopefully not...
 
 ## 20 Jan 20
 
+### Noothigattu deep dive
+From [MIT Media Lab](https://www.media.mit.edu/projects/a-voting-based-system-for-ethical-decision-making/overview/):
+> Our proof of concept shows that the decision the system takes is likely to be the same as if we could go to each of the 1.3 million voters, ask for their opinions, and then aggregate their opinions into a choice that satisfies mathematical notions of social justice. 
+
+How do they prove this in the paper?
+By proving that theoretically their system matches a monotonic SCC (i.a. Borda or Copeland)
+By showing that their system achieves enormously high accuracy on 3000 test instances (is this a function of high N, though?)
+
+One possible explanation for high accuracy: Noothigattu achieves astronomical accuracy by increasing number of pairwise comparisons per voter (equivalently, decreasing number of voters) - try filtering for high response voters in the query (if necessary, create the same synthetic data as in Noothigattu) - though in their final analysis, they used all 1.3 million voters
 
 ### Williams meet tomorrow
 - Run through Heilmeier's catechism, roughly.
@@ -316,25 +325,27 @@ Do the labeling functions have to be mostly accurate??? Hopefully not...
 - Some concerns:
   + The measurement problem
     * How to empirically prove this method is better? Is that necessary?
-      - How does Noothigattu do it?
+      - How does Noothigattu do it? mainly, estimate accuracy (extremely high @ 98% - is this what I think it is?); also use a synthetic data approach to measure accuracy loss as a result of summarization
       - Snorkel does it just by comparing accuracy/f1 score to hand labeled data - we've done that already
       - Easy to say that this method achieves the same for much less cost; harder to say that this method produces more moral outcomes
   + The case study
-    * Inherently problematic - disputed usefulness
+    * Inherently problematic representation - disputed usefulness
     * Too simple?? Snorkel usually works more dramatically with text data, 
 - Lay out future steps
   + Figure out how to prove supermorality
   + Same methods, kidney exchange use case - almost better because respondents included their rationales
   + Survey of real experts for a use case
 
-
-TODO
 <!-- ! Obtain kidney exchange data -->
-- Prep for Williams meet
+<!-- - Prep for Williams meet -->
 - Create a working example with Snorkel
     <!-- + Train a simple ML model on outputted labels and test final performance! -->
-    + Hand-verify each step in exploration file - passes the eye test?
+
+## TODO
+! Obtain Noothigattu code
+- Create a working example with Snorkel
     + Figure out why the LabelModel vote accuracy is so low - this accoutns for nearly all of hte ML model perofrmance
+      ~ Hand-verify each step in exploration file - passes the eye test?
     + Set up a better test environment (full Python) for grid searching models / LF inclusion / hyperparameters
     + Try tuning the fxns for better performance
     + Figure out a way to weight the strength of each heuristic? Would probably improve performance
@@ -344,7 +355,9 @@ TODO
     + Nootigatthu et al.
 - Find more ethical algorithm use cases in the literature - maybe start with that one ethical alg lit review with the collective/individual taxonomy
 
+## Future features
 - (Bonus) Compare effect sizes in label model to effect sizes in MM paper
+- (Hard) Re-write Snorkel source to make this an original aggregation approach; might be easiest to do this while writing the manuscript
 - (Hard) Decide how to prove this method is better, not just comparable
 - (Hard) Design an experiment to actually gather heuristics from experts for one of the case studies 
     + try to demonstrate that the method works by asking SMEs, instead of just making up heuristics that get a good performance 
