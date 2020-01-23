@@ -312,7 +312,14 @@ By showing that their system achieves enormously high accuracy on 3000 test inst
 
 One possible explanation for high accuracy: Noothigattu achieves astronomical accuracy by increasing number of pairwise comparisons per voter (equivalently, decreasing number of voters) - try filtering for high response voters in the query (if necessary, create the same synthetic data as in Noothigattu) - though in their final analysis, they used all 1.3 million voters
 
-### Williams meet tomorrow
+<!-- ! Obtain kidney exchange data -->
+<!-- - Prep for Williams meet -->
+- Create a working example with Snorkel
+    <!-- + Train a simple ML model on outputted labels and test final performance! -->
+
+## 21 Jan 20
+
+### Williams meet
 - Run through Heilmeier's catechism, roughly.
 - Lay out methods/results so far
   + Obtained MoralMachine data - pairwise alternatives
@@ -336,29 +343,80 @@ One possible explanation for high accuracy: Noothigattu achieves astronomical ac
   + Same methods, kidney exchange use case - almost better because respondents included their rationales
   + Survey of real experts for a use case
 
-<!-- ! Obtain kidney exchange data -->
-<!-- - Prep for Williams meet -->
-- Create a working example with Snorkel
-    <!-- + Train a simple ML model on outputted labels and test final performance! -->
+<!-- Ryan> Send Williams the papers -->
+
+Is there a way to prove if this is more extensible (more generalizable) to zero-shot scenarios?
+Extrapolate beyond statistical value of life? For instance, regular ML model would value 100 y/o's less than heuristic model
+
+Use case where expert demographic problem might not be such an issue: e.g. decision-making by doctors
+
+Seems like this approach inherently easier to sell for scenarios where lots of expertise required (e.g. medical)
+
+## 22 Jan 20
+
+N.B. increasing sample size by an order of magnitude increases average pairwise comparisons per voter by .16
+
+Found a bug with joining - had dupes
+
+Another bug - there are two seperate crossing signals, one for each in ped v. ped
+
+Things to measure (outputs):
+- MajorityLabelVoter() acc vs LabelModel() acc
+- LabelModel() weights
+
+Things to vary (inputs):
+- LF inclusion
+- Model
+- Model parameters
+- Data content
+
+### Paper outline
+- Heilmeier's catechism
+- Here is a new method
+  + Make it clear we are not trying to represent voter's responses - this is an alternate method
+- MM use case
+  + We tried creating labeling functions based on MM results (as if regular people were the experts)
+  + Here's how the label functions performed relative to real users, and here's how much less it cost
+  + When does this method disagree and why?
+- Kidney use case
+  + Same thing, but this time users explicitly told us their rationales; let's pretend they're trained experts
+  + Now how do the results compare?
+  + When does this method disagree and why?
+- Discuss benefits
+  + Cost - as demonstrated by comparability
+  + Zero-shot applications - theoretical argument about info gain from heuristics
+  + For highly complex scenarios when gathering training data is literally not feasible
+- Discuss drawbacks
+  + Barriers to entry (education)
+  + Demographic problem (smaller sample, less representative demographically) - experts must be proxies for larger populations
+  + Inherently problematic case studies - e.g. still limited by choice of representation of ethical dilemmas
+- Mirror weak supervision trade-offs section of Snorkel paper`
 
 ## TODO
-! Obtain Noothigattu code
-- Create a working example with Snorkel
-    + Figure out why the LabelModel vote accuracy is so low - this accoutns for nearly all of hte ML model perofrmance
-      ~ Hand-verify each step in exploration file - passes the eye test?
-    + Set up a better test environment (full Python) for grid searching models / LF inclusion / hyperparameters
-    + Try tuning the fxns for better performance
-    + Figure out a way to weight the strength of each heuristic? Would probably improve performance
+- Create a respectable example with Snorkel
+  + Figure out why the LabelModel vote accuracy is so low - this accoutns for nearly all of the ML model performance
+    ~ Hand-verify each step in exploration file - passes the eye test?
+    * Revamp SQL query - get only full sessions, make the SQL query do some more of the work
+    * Refactor test environment
+      - Stay in the Jupyter file - reloading data every time will take too long
+      - Have a nice, compact view of alternatives - will make debugging much easier
+      - Write output functions for the metrics measured - inputs should be the things to manipulate
+    * Do a quick write up on the false positives / false negatives - what are typical differences in decisions from MM users to the label model?
+    * Try tuning the fxns for better performance - then stop after this step
+- Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?
 - Replicate for the kidney exchange problem
-- Replicate some other models for a baseline
-    + Kim et al.
-    + Nootigatthu et al.
+- Write up Snorkel in a research paper - see [paper outline](#paper-outline)
+- Replicate some other models for a literal baseline (to better compare performance - only way to know if actually comparable)
+  + ! Obtain Noothigattu code
+  + Kim et al.
+  + Nootigatthu et al.
 - Find more ethical algorithm use cases in the literature - maybe start with that one ethical alg lit review with the collective/individual taxonomy
 
 ## Future features
+- (Bonus) Add a method for strategically weighting heuristics based on the expert's "strength of belief" in them
 - (Bonus) Compare effect sizes in label model to effect sizes in MM paper
 - (Hard) Re-write Snorkel source to make this an original aggregation approach; might be easiest to do this while writing the manuscript
-- (Hard) Decide how to prove this method is better, not just comparable
+- (Hard) Decide how to prove this method is better (supermoral), not just comparable
 - (Hard) Design an experiment to actually gather heuristics from experts for one of the case studies 
     + try to demonstrate that the method works by asking SMEs, instead of just making up heuristics that get a good performance 
     + try to collect demographics to see what expert profile typically performs best, where performance is measured against the hand-labeled data
