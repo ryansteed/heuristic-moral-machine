@@ -81,19 +81,34 @@ def status(x):
 @labeling_function()
 def legal(x):
     """Do not hit the pedestrians if the pedestrians are crossing legally."""
-    # if crossing is explicitly legal (green light)
-    if (x["CrossingSignal"] == 1):
-        # choose the barrier alternative, if it exists
-        return choose_barrier(x)
+    # if the option is between pedestrians and an AV
+    if not (x["Barrier_int"] == 0 and x["Barrier_noint"] == 0):
+        # if crossing is explicitly legal (green light) for the pedestrians
+        if (x["CrossingSignal_int"] == 1 or x["CrossingSignal_noint"] == 1):
+            # choose the barrier alternative, if it exists
+            return choose_barrier(x)
+    # otherwise it's peds vs peds - prefer the one following the law
+    else:
+        # if crossing scenario is the same for both groups, abstain
+        if (x["CrossingSignal_int"] == x["CrossingSignal_noint"]):
+            return -1
+        # if one group is crossing illegally, choose against that group
+        if x["CrossingSignal_int"] == 2:
+            return 0
+        if x["CrossingSignal_noint" == 2]:
+            return 1
+        return -1
     return -1
 
 @labeling_function()
 def illegal(x):
     """Save the passengers if the pedestrians are crossing illegally."""
-    # if crossing is explicitly illegal (red light)
-    if (x["CrossingSignal"] == 2):
-        # choose not to hit the barrier
-        return choose_barrier(x, reverse=True)
+    # if the choice is between an AV and pedestrians
+    if not (x["Barrier_int"] == 0 and x["Barrier_noint"] == 0):
+        # if the pedestrian group is crossing illegally
+        if (x["CrossingSignal_int"] == 2 or x["CrossingSignal_noint"] == 2):
+            # choose not to hit the barrier
+            return choose_barrier(x, reverse=True)
     return -1
 
 @labeling_function()

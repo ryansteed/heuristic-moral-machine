@@ -136,44 +136,52 @@ class LabelingFunctionTestCase(unittest.TestCase):
 
 	def test_legal(self):
 		self.assertEqual(ABSTAIN, legal(self.generate_df_random({
-			"CrossingSignal": 0,
+			"CrossingSignal_int": 0,
+			"CrossingSignal_noint": 0,
 			"Barrier_noint": 0,
 			"Barrier_int": 0
 		})))
 		self.assertEqual(ABSTAIN, legal(self.generate_df_random({
-			"CrossingSignal": 2,
+			"CrossingSignal_int": 2,
+			"CrossingSignal_noint": 2,
 			"Barrier_noint": 0,
 			"Barrier_int": 0
 		})))
 		self.assertEqual(INT, legal(self.generate_df_random({
-			"CrossingSignal": 1,
+			"CrossingSignal_noint": 1,
+			"CrossingSignal_int": 0,
 			"Barrier_noint": 0,
 			"Barrier_int": 1
 		})))
 		self.assertEqual(NOINT, legal(self.generate_df_random({
-			"CrossingSignal": 1,
+			"CrossingSignal_int": 1,
+			"CrossingSignal_noint": 0,
 			"Barrier_int": 0,
 			"Barrier_noint": 1
 		})))
 
 	def test_illegal(self):
 		self.assertEqual(ABSTAIN, illegal(self.generate_df_random({
-			"CrossingSignal": 0,
+			"CrossingSignal_int": 0,
+			"CrossingSignal_noint": 0,
 			"Barrier_noint": 0,
 			"Barrier_int": 0
 		})))
 		self.assertEqual(ABSTAIN, illegal(self.generate_df_random({
-			"CrossingSignal": 1,
+			"CrossingSignal_int": 1,
+			"CrossingSignal_noint": 1,
 			"Barrier_noint": 0,
 			"Barrier_int": 0
 		})))
 		self.assertEqual(NOINT, illegal(self.generate_df_random({
-			"CrossingSignal": 2,
+			"CrossingSignal_int": 0,
+			"CrossingSignal_noint": 2,
 			"Barrier_noint": 0,
 			"Barrier_int": 1
 		})))
 		self.assertEqual(INT, illegal(self.generate_df_random({
-			"CrossingSignal": 2,
+			"CrossingSignal_int": 2,
+			"CrossingSignal_noint": 0,
 			"Barrier_int": 0,
 			"Barrier_noint": 1
 		})))
