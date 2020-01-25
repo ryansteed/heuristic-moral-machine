@@ -1,5 +1,11 @@
 import numpy as np
 
+characters_all = [
+    'Man', 'Woman', 'Pregnant', 'Stroller', 'OldMan', 'OldWoman', 'Boy', 'Girl',\
+    'Homeless', 'LargeWoman', 'LargeMan', 'Criminal', 'MaleExecutive', 'FemaleExecutive', \
+    'FemaleAthlete', 'MaleAthlete', 'FemaleDoctor', 'MaleDoctor', 'Dog', 'Cat'
+]
+
 def choose_max(x):
     """
     Accept a single argmax only; if there is a tie, abstain.

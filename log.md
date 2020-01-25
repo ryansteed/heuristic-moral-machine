@@ -184,7 +184,7 @@ looks like only 1 of 13 sessions was totally randomized - so what data was Nooth
 
 New theory - each row is one card, and `Saved` is whether that card was chosen; but how to tell which cards were being compared? no obvious session ID or pointer
 
-but it seems impossible that each card has its own row! since each row seems like it should be the answer! only possible answer is that they didn't include the other alternative in the data? or not? fuck me, man
+but it seems impossible that each card has its own row! since each row seems like it should be the answer! only possible answer is that they didn't include the other alternative in the data? or not?
 
 need to find an example where it would have been necessary for the coders to know both alternatives at once
 
@@ -369,6 +369,7 @@ Things to vary (inputs):
 - Model
 - Model parameters
 - Data content
+- Label threshold
 
 ### Paper outline
 - Heilmeier's catechism
@@ -377,6 +378,7 @@ Things to vary (inputs):
 - MM use case
   + We tried creating labeling functions based on MM results (as if regular people were the experts)
   + Here's how the label functions performed relative to real users, and here's how much less it cost
+    * How well does it agree on random scenarios? on all scenarios?
   + When does this method disagree and why?
 - Kidney use case
   + Same thing, but this time users explicitly told us their rationales; let's pretend they're trained experts
@@ -390,18 +392,77 @@ Things to vary (inputs):
   + Barriers to entry (education)
   + Demographic problem (smaller sample, less representative demographically) - experts must be proxies for larger populations
   + Inherently problematic case studies - e.g. still limited by choice of representation of ethical dilemmas
-- Mirror weak supervision trade-offs section of Snorkel paper`
+  + Succintly, moral machine is deliberately simplified
+- Mirror weak supervision trade-offs section of Snorkel paper
+
+## 23 Jan 20
+Found new paper by Awad et al. from MM website - Switch-Loop-Footbridge preference
+Here, really just one variable of interest; not good for our use case
+https://www.mendeley.com/viewer/?fileId=732291c7-0367-658b-5676-1f0cceb766c3&documentId=e78041ab-0432-3e5e-84dd-3f47bd64edd7
+
+### Model Label vs. Voter Label Analysis
+Some observations about model errors
+
+First, taking off "random" type restriction - all scenarios allowed
+
+In small sample (100000) scraped, one FP:
+> What should the self-driving car do?
+> 
+>       🚘 
+>      |  \ 
+>      v   v
+>   🔴🚸  🚧 
+>    NOINT  INT 
+> INT saves: 
+> ['Man', 'OldWoman']
+> NOINT saves: 
+> ['Homeless', 'Homeless']
+
+On the other hand, 10 FNs (many more false negatives - need to raise threshold?)
+
+Cases where user for some reason decided not to be utilitarian - and where there isn't a clear balance of characters
+
+Which ScenarioTypes does the model most often get wrong? Do this analysis
+
+Which ScenarioTypes does the model most often get wrong?
+> Worst at gender, but still better than random - 55% accuracy
+
+---
+<!-- - Create a respectable example with Snorkel
+  + Figure out why the LabelModel vote accuracy is so low - this accoutns for nearly all of the ML model performance
+    ~ Hand-verify each step in exploration file - passes the eye test?
+    * Refactor test environment
+      - Stay in the Jupyter file - reloading data every time will take too long
+      <!-- - Have a nice, compact view of alternatives - will make debugging much easier -->
+
+## 25 Jan 20
+
+Fantastic! Only a 2% difference in performance between gold label trained ML model and heuristic trained model
+
+Seems like the previous values were bugs - due to small sample size, probably
+
+So seems like it would be really great to ask experts to write the heuristic functions
+
+Things to measure (outputs):
+- MajorityLabelVoter() acc vs LabelModel() acc
+- LabelModel() weights
+
+Things to vary (inputs):
+- LF inclusion
+> Turns out inaction LF costs a whole point of accuracy - removed
+- Model
+- Model parameters
+- Data content
+- Label threshold
 
 ## TODO
 - Create a respectable example with Snorkel
-  + Figure out why the LabelModel vote accuracy is so low - this accoutns for nearly all of the ML model performance
-    ~ Hand-verify each step in exploration file - passes the eye test?
-    * Revamp SQL query - get only full sessions, make the SQL query do some more of the work
-    * Refactor test environment
-      - Stay in the Jupyter file - reloading data every time will take too long
-      - Have a nice, compact view of alternatives - will make debugging much easier
-      - Write output functions for the metrics measured - inputs should be the things to manipulate
-    * Do a quick write up on the false positives / false negatives - what are typical differences in decisions from MM users to the label model?
+  <!-- + Figure out why the LabelModel vote accuracy is so low - this accounts for nearly all of the ML model performance -->
+    <!-- ~ Revamp SQL query - get only full sessions -->
+    * Do a quick write up on the false positives / false negatives
+      - What are typical differences in decisions from MM users to the label model?
+      <!-- - Which ScenarioTypes does the model most often get wrong? -->
+    * Refactor for grid search
     * Try tuning the fxns for better performance - then stop after this step
 - Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?
 - Replicate for the kidney exchange problem

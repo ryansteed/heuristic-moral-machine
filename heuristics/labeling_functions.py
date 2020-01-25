@@ -7,12 +7,6 @@ from utils import *
 :returns: whether or not to intervene (0 or 1); -1 to abstain
 """
 
-characters_all = [
-    'Man', 'Woman', 'Pregnant', 'Stroller', 'OldMan', 'OldWoman', 'Boy', 'Girl',\
-    'Homeless', 'LargeWoman', 'LargeMan', 'Criminal', 'MaleExecutive', 'FemaleExecutive', \
-    'FemaleAthlete', 'MaleAthlete', 'FemaleDoctor', 'MaleDoctor', 'Dog', 'Cat'
-]
-
 @labeling_function()
 def doctors(x):
     """Favor doctors."""
