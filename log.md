@@ -450,10 +450,44 @@ Things to measure (outputs):
 Things to vary (inputs):
 - LF inclusion
 > Turns out inaction LF costs a whole point of accuracy - removed
+> doctors: 0.0
+> utilitarian: -0.002488638822765621
+> utilitarian_anthro: -0.0022181346028997684
+> inaction: 0.014715429560701154
+> pedestrians: -0.001839428695087686
+> females: -0.04712183510062762
+> fitness: -0.006383899588833564
+> status: -0.0007033109716512165
+> legal: -0.0012443194113828104
+> illegal: -0.0002705042198658525
+> youth: -0.0036247565462020903
+> criminals: -0.0007033109716512165
+> homeless: -0.004273966673880136
+> pets: -0.000108201687946341
+> spare_strollers: -0.001406621943302322
+> spare_girl: -0.008656135035706614
+> spare_boy: -0.000649210127678046
+> spare_pregnant: -0.0008115126595975575
 - Model
+```
+## Random Forest ##
+Accuracy with gold labels: 0.6962778619346461
+Accuracy with heuristic labels: 0.6708504652672582
+## Log Reg ##
+Accuracy with gold labels: 0.7052045011902186
+Accuracy with heuristic labels: 0.6623566327634711
+## KNN ##
+Accuracy with gold labels: 0.653862800259684
+Accuracy with heuristic labels: 0.6633304479549881
+## SVC Linear ##
+Accuracy with gold labels: 0.7033650724951309
+Accuracy with heuristic labels: 0.6637632547067734
+## SVC Nonlinear ##
+-
+```
 - Model parameters
-- Data content
-- Label threshold
+
+<!-- - Data content? -->
 
 ## TODO
 - Create a respectable example with Snorkel
@@ -462,10 +496,9 @@ Things to vary (inputs):
     * Do a quick write up on the false positives / false negatives
       - What are typical differences in decisions from MM users to the label model?
       <!-- - Which ScenarioTypes does the model most often get wrong? -->
-    * Refactor for grid search
-    * Try tuning the fxns for better performance - then stop after this step
-- Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?
+    ~ Refactor for grid search
 - Replicate for the kidney exchange problem
+- Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?
 - Write up Snorkel in a research paper - see [paper outline](#paper-outline)
 - Replicate some other models for a literal baseline (to better compare performance - only way to know if actually comparable)
   + ! Obtain Noothigattu code
