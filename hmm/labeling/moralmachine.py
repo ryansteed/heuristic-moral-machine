@@ -1,6 +1,7 @@
 from snorkel.labeling import labeling_function
 import numpy as np
-from utils import *
+from .utils import *
+from ..classification import *
 
 """
 :param x: a DataFrame containing all the fields of the input DataFrame for two ethical alternatives

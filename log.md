@@ -489,6 +489,9 @@ Accuracy with heuristic labels: 0.6637632547067734
 
 <!-- - Data content? -->
 
+
+NB: had to do a refactor, now need to run `python -m hmm.labeling_functions.tests` to run labeling function unit tests
+
 ## TODO
 - Create a respectable example with Snorkel
   <!-- + Figure out why the LabelModel vote accuracy is so low - this accounts for nearly all of the ML model performance -->
@@ -498,6 +501,9 @@ Accuracy with heuristic labels: 0.6637632547067734
       <!-- - Which ScenarioTypes does the model most often get wrong? -->
     ~ Refactor for grid search
 - Replicate for the kidney exchange problem
+  + First need to go through and export generalizable functions to utils
+  + Load the data
+  + Try using this use case for label modeling - https://www.snorkel.org/use-cases/crowdsourcing-tutorial
 - Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?
 - Write up Snorkel in a research paper - see [paper outline](#paper-outline)
 - Replicate some other models for a literal baseline (to better compare performance - only way to know if actually comparable)

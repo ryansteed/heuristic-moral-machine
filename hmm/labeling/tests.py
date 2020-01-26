@@ -1,5 +1,5 @@
 import unittest
-from labeling_functions import *
+from .moralmachine import *
 import pandas as pd
 
 """
