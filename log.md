@@ -372,6 +372,10 @@ Things to vary (inputs):
 - Label threshold
 
 ### Paper outline
+- Section on framing: what is a morality problem? what are some examples in industry? do we need to re-frame existing problems? (are all problems moral problems?)
+  + What constitutes a *moral* problem (as opposed to another preferences problem)
+  + show how this would look from regulator side, and from industry side - when would a regulator require this system?
+  + if we are treating these case studies as unrealistic representations, need to at least describe how this would translate to realistic representations
 - Heilmeier's catechism
 - Here is a new method
   + Make it clear we are not trying to represent voter's responses - this is an alternate method
@@ -492,32 +496,53 @@ Accuracy with heuristic labels: 0.6637632547067734
 
 NB: had to do a refactor, now need to run `python -m hmm.labeling_functions.tests` to run labeling function unit tests
 
-## TODO
-- Create a respectable example with Snorkel
+<!-- - Create a respectable example with Snorkel -->
   <!-- + Figure out why the LabelModel vote accuracy is so low - this accounts for nearly all of the ML model performance -->
     <!-- ~ Revamp SQL query - get only full sessions -->
-    * Do a quick write up on the false positives / false negatives
-      - What are typical differences in decisions from MM users to the label model?
+    <!-- * Do a quick write up on the false positives / false negatives -->
+      <!-- - What are typical differences in decisions from MM users to the label model? -->
       <!-- - Which ScenarioTypes does the model most often get wrong? -->
-    ~ Refactor for grid search
+    <!-- ~ Refactor for grid search -->
+  <!-- + First need to go through and export generalizable functions to utils -->
+
+## Kidney Exchange Data Exploration
+
+Survey 1 sources moral variables to include in the kidney exchange problem - what variables should be included in survey 2?
+
+Kidney exchange problem - not big enough?? or maybe this can just be a small use case
+
+28 pairwise comparisons per voter, for 289 voters - all the comparisons are the same
+The advantage here is that we can actually compare the voters as an ensemble against the labeling functions as an ensemble - could compare LF majority voting to majority voter voting
+
+that should be a total of 8092 pairwise comparisons
+
+## TODO
+<!-- - Respond to Ritesh - how to get accuracy numbers? -->
 - Replicate for the kidney exchange problem
-  + First need to go through and export generalizable functions to utils
-  + Load the data
+  <!-- + Load the data -->
+  + Write one heuristic for each voter
   + Try using this use case for label modeling - https://www.snorkel.org/use-cases/crowdsourcing-tutorial
 - Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?
+  + Is there a bail dataset I could use?
+  + Potentially useful source of datasets: http://www.preflib.org/
+  + Is there a use case that isn't in the form of a pairwise comparison? MM is nice because it's not just preference learning - it's conditional preference learning (crossing light, barrier, etc.)
 - Write up Snorkel in a research paper - see [paper outline](#paper-outline)
+- Develop a combined method with Snorkel and pairwise preference learning - i.e. try to apply a classic pairwise ML model to LF output
 - Replicate some other models for a literal baseline (to better compare performance - only way to know if actually comparable)
-  + ! Obtain Noothigattu code
+  <!-- + ! Obtain Noothigattu code -->
   + Kim et al.
   + Nootigatthu et al.
+    * Just get the mean anonymous preference profile, Borda counted - don't bother with sampling - how many times does the "voted" decision agree with my ML model's decision? this would be true accuracy - see section 6.1
 - Find more ethical algorithm use cases in the literature - maybe start with that one ethical alg lit review with the collective/individual taxonomy
 
 ## Future features
+- (Bonus) Demonstrate half heuristc, half crowdsourcing approach with MM data https://www.snorkel.org/use-cases/crowdsourcing-tutorial
 - (Bonus) Add a method for strategically weighting heuristics based on the expert's "strength of belief" in them
 - (Bonus) Compare effect sizes in label model to effect sizes in MM paper
 - (Hard) Re-write Snorkel source to make this an original aggregation approach; might be easiest to do this while writing the manuscript
 - (Hard) Decide how to prove this method is better (supermoral), not just comparable
 - (Hard) Design an experiment to actually gather heuristics from experts for one of the case studies 
-    + try to demonstrate that the method works by asking SMEs, instead of just making up heuristics that get a good performance 
-    + try to collect demographics to see what expert profile typically performs best, where performance is measured against the hand-labeled data
+  + read up on preference elicitation for heuristics - social choice literature
+  + try to demonstrate that the method works by asking SMEs, instead of just making up heuristics that get a good performance 
+  + try to collect demographics to see what expert profile typically performs best, where performance is measured against the hand-labeled data
 
