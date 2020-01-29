@@ -1,9 +1,10 @@
 import numpy as np
+import pandas as pd
 
 characters_all = [
-    'Man', 'Woman', 'Pregnant', 'Stroller', 'OldMan', 'OldWoman', 'Boy', 'Girl',\
-    'Homeless', 'LargeWoman', 'LargeMan', 'Criminal', 'MaleExecutive', 'FemaleExecutive', \
-    'FemaleAthlete', 'MaleAthlete', 'FemaleDoctor', 'MaleDoctor', 'Dog', 'Cat'
+    'Man', 'Woman', 'Boy', 'Girl', 'OldMan', 'OldWoman', 'Stroller', 'Pregnant', \
+    'LargeMan', 'LargeWoman', 'MaleAthlete', 'FemaleAthlete', 'MaleExecutive', 'FemaleExecutive', \
+    'MaleDoctor', 'FemaleDoctor', 'Homeless', 'Criminal', 'Dog', 'Cat'
 ]
 
 def choose_max(x):
@@ -62,3 +63,9 @@ def spare_group(x, group):
     if group_member_present["noint"]: return 0
     if group_member_present["int"]: return 1
     return -1
+
+
+def transform_abstract(df, A, A_cols, A_rows):
+    Theta = np.array(df[A_cols].values)
+    f = A.dot(Theta.transpose())
+    return pd.DataFrame(f.transpose(), columns=A_rows).set_index(df_i.index)

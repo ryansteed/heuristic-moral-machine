@@ -371,7 +371,7 @@ Things to vary (inputs):
 - Data content
 - Label threshold
 
-### Paper outline
+### Paper outline - now in `outline.md`
 - Section on framing: what is a morality problem? what are some examples in industry? do we need to re-frame existing problems? (are all problems moral problems?)
   + What constitutes a *moral* problem (as opposed to another preferences problem)
   + show how this would look from regulator side, and from industry side - when would a regulator require this system?
@@ -383,7 +383,11 @@ Things to vary (inputs):
   + We tried creating labeling functions based on MM results (as if regular people were the experts)
   + Here's how the label functions performed relative to real users, and here's how much less it cost
     * How well does it agree on random scenarios? on all scenarios?
-  + When does this method disagree and why?
+  + When does this method disagree with Kim, Noothigattu and why?
+    * Highlight weaknesses of each method
+      - Kim: the same as the limits of utility function morality (what if there aren't estimatable moral variables? similar to KE example)
+      - Noothigattu: not very fast; probably super inaccurate, if we can manage to reproduce it
+      - Both: rely on democratic voter data
 - Kidney use case
   + Same thing, but this time users explicitly told us their rationales; let's pretend they're trained experts
   + Now how do the results compare?
@@ -516,29 +520,95 @@ The advantage here is that we can actually compare the voters as an ensemble aga
 
 that should be a total of 8092 pairwise comparisons
 
-## TODO
 <!-- - Respond to Ritesh - how to get accuracy numbers? -->
+
+<!-- + Load the data -->
+
+<!-- + ! Obtain Noothigattu code -->
+
+## 28 Jan 20
+
+An interesting framing: moral decisions are those that replace choosing randomly when all alternatives have equal cost, according to the regular problem solving solution
+
+This definition falls short, though - sometimes the difference in cost is outweighed by the moral considerations
+
+So are then those moral considerations ingrained in the cost function? this is the utility max approach to moral AI
+
+What makes this different from a regular machine learning problem?
+- Experts should probably be equally weighted? Some sort of social choice considerations are necessary
+
+
+A new idea for kidney exchange:
+- A random sample of MTurk voters get an LF? No, this is the same as profiling voters - trying to get more generalization than that
+- Unless... what if used the matrix of pairwise preferences from voters, then ran directly through the Snorkel estimator? No, this probably wouldn't work mathematically and wouldn't add much
+- Is kidney exchange even a good application of this method? Yes, because:
+  + The study only asks about two ages - even adding more studies would just add more ages or age ranges; it would be best to deal with all possible ages (user LFs can be numeric)
+  + LF approach could be an easy way to reconcile stakeholder input - instead of measuring and reconciling preferences across variables, just need to reconcile labeling functions (each stakeholder could choose variables at will)
+- So with kidney exchange use case, just trying to show:
+  + LF method performs as well
+  + LF method can handle continuously distributed variables (synthetic data), where weighting cannot
+    * Do this by repeating Freedman's kidney simulation, but with randomly generated patient profiles instead - basically can just steal her methods
+
+NEW CENTRAL QUESTION FOR THE KIDNEY CASE: HOW SHOULD THE LABELING FUNCTIONS BE COMBINED? CURRENTLY, EVEN UNDER LABEL MODEL, ALL LFs TREATED EQUALLY
+
+Going to the Snorkel lit to see if anything can be learned...
+
+nope! no such system - maybe that's a good thing
+
+### comparison to Kim reported accuracies
+
+Kim uses N={4,6,..,128} where N is the number of voters whose full sessions were sampled
+
+Highest accuracy is in the low 70s
+
+Interesting result - was getting users with only 11 and 12 votes, but when increased to voters with 13 and 14 votes, increased accuracy of regular ML model by about 2%
+commensurate increase in LF ML model was lower
+
+So, Kim does way better on low numbers of voters - which makes sense, because they are estimating per voter
+
+Only way to make a good claim is to replicate their approach and test... later!
+
+<!-- - Extra use case analysis -->
+  <!-- ~ Test on a small number of voters, as in Kim - how much higher is accuracy? -->
+    <!-- - TODO: check if the stratified split is actually working... -->
+
+## 29 Jan 20
+
+Temporarily stumped on how hierarchical bayesian modeling works... how to estimate???
+
+Gonna ask Williams about coding Kim et al., move on to coding Noothigattu for now
+
+## TODO
+- Replicate some other models for an MM baseline (to better compare performance - only way to know if actually comparable)
+  + Kim et al.
+    ~ Convert data to abstract vectors
+    * Try to reproduce Figure 8 (out of sample individual voter predictions) - for each of their benchmark models - note that they sample a very low number of respondents, this may affect results
+    * Rewrite regular analysis to use abstract vectors as well - much simpler, but requires LF re-write
+  + Nootigatthu et al.
+    * Just get the mean anonymous preference profile, Borda counted - don't bother with sampling - how many times does the "voted" decision agree with my ML model's decision? this would be true accuracy - see section 6.1
 - Replicate for the kidney exchange problem
-  <!-- + Load the data -->
-  + Write one heuristic for each voter
-  + Try using this use case for label modeling - https://www.snorkel.org/use-cases/crowdsourcing-tutorial
-- Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?
+  + Write general heuristics matching common user preferences
+  + Compare user choices using same methods as in MM case
+  + Repeat Freedman's kidney simulation, but with randomly generated patient profiles instead - basically can just copy methods from her paper, Dickerson's code
+- Write up Snorkel in a research paper - see [paper outline](#paper-outline)
+  + What's missing in this draft?
+  + What use cases could complement best?
+- [By next Williams meet] Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?
   + Is there a bail dataset I could use?
   + Potentially useful source of datasets: http://www.preflib.org/
   + Is there a use case that isn't in the form of a pairwise comparison? MM is nice because it's not just preference learning - it's conditional preference learning (crossing light, barrier, etc.)
-- Write up Snorkel in a research paper - see [paper outline](#paper-outline)
-- Develop a combined method with Snorkel and pairwise preference learning - i.e. try to apply a classic pairwise ML model to LF output
-- Replicate some other models for a literal baseline (to better compare performance - only way to know if actually comparable)
-  <!-- + ! Obtain Noothigattu code -->
-  + Kim et al.
-  + Nootigatthu et al.
-    * Just get the mean anonymous preference profile, Borda counted - don't bother with sampling - how many times does the "voted" decision agree with my ML model's decision? this would be true accuracy - see section 6.1
-- Find more ethical algorithm use cases in the literature - maybe start with that one ethical alg lit review with the collective/individual taxonomy
+  + Need something really complicated for Snorkel to shine - text, or tons of variables (traffic data?) - but how to define a moral situation? are moral situations, because they are marginal, naturally simple? or has no one bothered to draw them out
+  + Find more ethical algorithm use cases in the literature - maybe start with that one ethical alg lit review with the collective/individual taxonomy - try to find examples from each category in the taxonomy
+  + Preferably a text/NLP problem
+- Develop a combined method with Snorkel and pairwise preference learning - i.e. try to apply a regression (learning to rank, basically) ML model to LF output
+  + Basically, develop some social choice methods for "fairly" combining LFs - e.g. let's say you have LFs from the nurses, the doctors, the patients, and the hospital admins; how to reconcile conflicts algorithmically? (and validate?)
+  + Idea: Add a method for strategically weighting heuristics based on the expert's "strength of belief" in them
 
 ## Future features
-- (Bonus) Demonstrate half heuristc, half crowdsourcing approach with MM data https://www.snorkel.org/use-cases/crowdsourcing-tutorial
-- (Bonus) Add a method for strategically weighting heuristics based on the expert's "strength of belief" in them
-- (Bonus) Compare effect sizes in label model to effect sizes in MM paper
+- (Bonus) Train on abstract feature representations (see Kim et al.) instead of raw sparse data
+- (Bonus) Find a use case in which slicing matters, and use Snorkel slicing approaches
+- (Bonus) Demonstrate half heuristic, half crowdsourcing approach with MM data https://www.snorkel.org/use-cases/crowdsourcing-tutorial
+- (Bonus) Compare effect sizes in label model to effect sizes in MM paper; compare also to weights obtained by Freedman in KE use case
 - (Hard) Re-write Snorkel source to make this an original aggregation approach; might be easiest to do this while writing the manuscript
 - (Hard) Decide how to prove this method is better (supermoral), not just comparable
 - (Hard) Design an experiment to actually gather heuristics from experts for one of the case studies 

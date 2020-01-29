@@ -3,3 +3,5 @@ jupyter/.ipynb_checkpoints
 .Rproj.user
 hmm/__pycache__
 hmm/labeling/__pycache__
+hmm/.ipynb_checkpoints
+hmm/labeling/.ipynb_checkpoints
