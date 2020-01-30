@@ -578,12 +578,17 @@ Temporarily stumped on how hierarchical bayesian modeling works... how to estima
 
 Gonna ask Williams about coding Kim et al., move on to coding Noothigattu for now
 
+<!-- ~ Convert data to abstract vectors -->
+
+## 30 Jan 20
+
+Same thing today - finish abstract vector conversion, then learn hierarchical bayesian
+
 ## TODO
 - Replicate some other models for an MM baseline (to better compare performance - only way to know if actually comparable)
   + Kim et al.
-    ~ Convert data to abstract vectors
     * Try to reproduce Figure 8 (out of sample individual voter predictions) - for each of their benchmark models - note that they sample a very low number of respondents, this may affect results
-    * Rewrite regular analysis to use abstract vectors as well - much simpler, but requires LF re-write
+    ~ Rewrite regular analysis to use abstract vectors as well - much simpler, but requires LF re-write
   + Nootigatthu et al.
     * Just get the mean anonymous preference profile, Borda counted - don't bother with sampling - how many times does the "voted" decision agree with my ML model's decision? this would be true accuracy - see section 6.1
 - Replicate for the kidney exchange problem

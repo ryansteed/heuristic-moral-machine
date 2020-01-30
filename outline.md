@@ -26,7 +26,7 @@
 - Discuss drawbacks
   + Barriers to entry (education)
   + Demographic problem (smaller sample, less representative demographically) - experts must be proxies for larger populations
-  + Inherently problematic case studies - e.g. still limited by choice of representation of ethical dilemmas
+  + Inherently problematic case studies - e.g. still limited by choice of representation of ethical dilemmas; implicit choice of moral status (what gets moral status?) by selection of features
   + Succintly, moral machine is deliberately simplified
 - Mirror weak supervision trade-offs section of Snorkel paper
 
