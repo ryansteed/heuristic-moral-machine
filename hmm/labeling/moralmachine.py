@@ -12,7 +12,7 @@ from ..classification import *
 def doctors(x):
     """Favor doctors."""
     num_doctors = np.array([
-        count_characters(x, suffix, ["MaleDoctor", "FemaleDoctor"]) 
+        x["Medical_{}".format(suffix)]
         for suffix in ['noint', 'int']
     ])
     return choose_max(num_doctors)
@@ -30,7 +30,7 @@ def utilitarian(x):
 def utilitarian_anthro(x):
     """Save the most lives."""
     max_hoomans = np.array([
-        count_characters(x, suffix, [c for c in characters_all if c not in ["Dog", "Cat"]])
+        x["Human_{}".format(suffix)]
         for suffix in ['noint', 'int']
     ])
     return choose_max(max_hoomans)
@@ -49,7 +49,7 @@ def pedestrians(x):
 def females(x):
     """Save the most women."""
     num_females = np.array([
-        count_characters(x, suf, ["Girl", "FemaleAthlete", "FemaleExecutive", "FemaleDoctor"])
+        count_characters(x, suf, ["Female"])
         for suf in ["noint", "int"]
     ])
     return choose_max(num_females)
@@ -58,8 +58,8 @@ def females(x):
 def fitness(x):
     """Favor alternatives where the overall fitness (fit - large) is higher."""
     fitness_score = np.array([
-        count_characters(x, suf, ["MaleAthlete", "FemaleAthlete"])\
-            - count_characters(x, suf, ["LargeMan", "LargeWoman"])
+        count_characters(x, suf, ["Fit"])\
+            - count_characters(x, suf, ["Fat"])
         for suf in ["noint", "int"]
     ])
     return choose_max(fitness_score)
@@ -68,7 +68,7 @@ def fitness(x):
 def status(x):
     """Save the most executives."""
     num_rich = np.array([
-        count_characters(x, suffix, ["MaleExecutive", "FemaleExecutive"])
+        count_characters(x, suffix, ["Working"])
         for suffix in ['noint', 'int']
     ])
     return choose_max(num_rich)
@@ -77,20 +77,20 @@ def status(x):
 def legal(x):
     """Do not hit the pedestrians if the pedestrians are crossing legally."""
     # if the option is between pedestrians and an AV
-    if not (x["Barrier_int"] == 0 and x["Barrier_noint"] == 0):
+    if (x["Passenger_int"] or x["Passenger_noint"]):
         # if crossing is explicitly legal (green light) for the pedestrians
-        if (x["CrossingSignal_int"] == 1 or x["CrossingSignal_noint"] == 1):
+        if (x["Law Abiding_int"] == 1 or x["Law Abiding_noint"] == 1):
             # choose the barrier alternative, if it exists
             return choose_barrier(x)
     # otherwise it's peds vs peds - prefer the one following the law
     else:
         # if crossing scenario is the same for both groups, abstain
-        if (x["CrossingSignal_int"] == x["CrossingSignal_noint"]):
+        if (x["Law Abiding_noint"] == x["Law Abiding_int"] and x["Law Violating_int"] == x["Law Violating_noint"]):
             return -1
         # if one group is crossing illegally, choose against that group
-        if x["CrossingSignal_int"] == 2:
+        if x["Law Violating_int"]:
             return 0
-        if x["CrossingSignal_noint" == 2]:
+        if x["Law Violating_noint"]:
             return 1
         return -1
     return -1
@@ -99,9 +99,9 @@ def legal(x):
 def illegal(x):
     """Save the passengers if the pedestrians are crossing illegally."""
     # if the choice is between an AV and pedestrians
-    if not (x["Barrier_int"] == 0 and x["Barrier_noint"] == 0):
+    if (x["Passenger_int"] or x["Passenger_noint"]):
         # if the pedestrian group is crossing illegally
-        if (x["CrossingSignal_int"] == 2 or x["CrossingSignal_noint"] == 2):
+        if (x["Law Violating_int"] or x["Law Violating_noint"]):
             # choose not to hit the barrier
             return choose_barrier(x, reverse=True)
     return -1
@@ -110,7 +110,7 @@ def illegal(x):
 def youth(x):
     """Save the most children."""
     num_children = np.array([
-        count_characters(x, suffix, ["Stroller", "Boy", "Girl", "Pregnant"])
+        count_characters(x, suffix, ["Young"])
         for suffix in ['noint', 'int']
     ])
     return choose_max(num_children)
@@ -128,25 +128,25 @@ def homeless(x):
 @labeling_function()
 def pets(x):
     """If either group consists only of pets, prefer the other."""
-    return select_against_homogenous_group(x, ["Dog", "Cat"])
+    return select_against_homogenous_group(x, ["Non-human"])
 
 @labeling_function()
 def spare_strollers(x):
     """Spare strollers at all cost."""
-    return spare_group(x, ["Stroller"])
+    return spare_group(x, ["Infancy"])
 
-@labeling_function()
-def spare_girl(x):
-    """Spare strollers at all cost."""
-    return spare_group(x, ["Girl"])
+# @labeling_function()
+# def spare_girl(x):
+#     """Spare girls at all cost."""
+#     return spare_group(x, ["Girl"])
 
-@labeling_function()
-def spare_boy(x):
-    """Spare strollers at all cost."""
-    return spare_group(x, ["Boy"])
+# @labeling_function()
+# def spare_boy(x):
+#     """Spare boys at all cost."""
+#     return spare_group(x, ["Boy"])
 
 @labeling_function()
 def spare_pregnant(x):
-    """Spare strollers at all cost."""
-    return spare_group(x, ["Pregnant"])
+    """Spare the pregnant at all cost."""
+    return spare_group(x, ["Pregnancy"])
 

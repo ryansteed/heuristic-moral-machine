@@ -498,7 +498,7 @@ Accuracy with heuristic labels: 0.6637632547067734
 <!-- - Data content? -->
 
 
-NB: had to do a refactor, now need to run `python -m hmm.labeling_functions.tests` to run labeling function unit tests
+NB: had to do a refactor, now need to run `python -m hmm.labeling.tests` to run labeling function unit tests
 
 <!-- - Create a respectable example with Snorkel -->
   <!-- + Figure out why the LabelModel vote accuracy is so low - this accounts for nearly all of the ML model performance -->
