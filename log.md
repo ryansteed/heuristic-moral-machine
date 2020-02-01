@@ -584,11 +584,49 @@ Gonna ask Williams about coding Kim et al., move on to coding Noothigattu for no
 
 Same thing today - finish abstract vector conversion, then learn hierarchical bayesian
 
+## 31 Jan 20
+
+For some reason, abstract LFs perform WAY worse with labeling model
+
+Here are the stats
+
+```
+doctors: -0.00033568311513931803
+utilitarian: 0.020812353138637163
+utilitarian_anthro: 0.07894147924359407
+inaction: -0.023833501174890914
+pedestrians: -0.06243705941591138
+females: 0.04951325948304797
+fitness: 0.0
+status: 0.0007273134161351891
+legal: -0.06243705941591138
+illegal: -0.038267875125881146
+youth: 0.021595613740628905
+criminals: 0.0
+homeless: 0.0
+pets: 0.00033568311513931803
+spare_strollers: 0.0
+spare_pregnant: 0.0
+```
+
+## 01 Feb 20
+
+Fixed an LF, trying to fix the label model again by grid searching which ones to include
+
+Managed to bump accuracy back up to on par with label model - now trying random to see if that helps at all (probably won't really shouldn't)
+
+Is it a problem with reduced coverage?
+
+Decided to roll back to old version if possible... causing issues
+
+
+
 ## TODO
 - Replicate some other models for an MM baseline (to better compare performance - only way to know if actually comparable)
   + Kim et al.
     * Try to reproduce Figure 8 (out of sample individual voter predictions) - for each of their benchmark models - note that they sample a very low number of respondents, this may affect results
     ~ Rewrite regular analysis to use abstract vectors as well - much simpler, but requires LF re-write
+      - Need to fix some of the labeling functions - inexplicable drop in LF model accuracy after simplification to abstract vectors
   + Nootigatthu et al.
     * Just get the mean anonymous preference profile, Borda counted - don't bother with sampling - how many times does the "voted" decision agree with my ML model's decision? this would be true accuracy - see section 6.1
 - Replicate for the kidney exchange problem
@@ -605,6 +643,7 @@ Same thing today - finish abstract vector conversion, then learn hierarchical ba
   + Need something really complicated for Snorkel to shine - text, or tons of variables (traffic data?) - but how to define a moral situation? are moral situations, because they are marginal, naturally simple? or has no one bothered to draw them out
   + Find more ethical algorithm use cases in the literature - maybe start with that one ethical alg lit review with the collective/individual taxonomy - try to find examples from each category in the taxonomy
   + Preferably a text/NLP problem
+  + Maybe housing allocation for the homeless?
 - Develop a combined method with Snorkel and pairwise preference learning - i.e. try to apply a regression (learning to rank, basically) ML model to LF output
   + Basically, develop some social choice methods for "fairly" combining LFs - e.g. let's say you have LFs from the nurses, the doctors, the patients, and the hospital admins; how to reconcile conflicts algorithmically? (and validate?)
   + Idea: Add a method for strategically weighting heuristics based on the expert's "strength of belief" in them

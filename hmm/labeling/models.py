@@ -33,8 +33,10 @@ class Labeler:
 	def _label_df(self, X, verbose):
 		return self.applier.apply(df=X, progress_bar=verbose)
 
-	def fit(self, L_train):
-		self.model.fit(L_train=L_train, n_epochs=500, lr=.001, log_freq=100, seed=1)
+	def fit(self, L_train, Y_dev=None, fit_params={}):
+		params = {'n_epochs': 500, 'lr': .001, 'log_freq': 100, 'seed': 1}
+		params.update(fit_params)
+		self.model.fit(L_train=L_train, Y_dev=Y_dev, **params)
 		return self.model
 
 	@staticmethod
