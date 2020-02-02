@@ -619,24 +619,38 @@ Is it a problem with reduced coverage?
 
 Decided to roll back to old version if possible... causing issues
 
+Should probably test Kim implementation on just one country's respondents - assume that in a later implementation can conduct a separate expert survey for each country, or ask experts to stratify by country (strip off group level of hierarchy)? not very elegant...
 
+Resources for Kim implementation:
+
+https://docs.pymc.io/notebooks/multilevel_modeling.html
+
+https://docs.pymc.io/notebooks/GLM-hierarchical.html
+
+Decision... seems like a lot of work to do replication for modest reward
+
+Gonna do other things first and ask Williams about it
+
+## 02 Feb 20
+
+Problem with kidney example - this is basically just a rules-based model... actually a little better than rules-based, but still
 
 ## TODO
-- Replicate some other models for an MM baseline (to better compare performance - only way to know if actually comparable)
-  + Kim et al.
-    * Try to reproduce Figure 8 (out of sample individual voter predictions) - for each of their benchmark models - note that they sample a very low number of respondents, this may affect results
-    ~ Rewrite regular analysis to use abstract vectors as well - much simpler, but requires LF re-write
-      - Need to fix some of the labeling functions - inexplicable drop in LF model accuracy after simplification to abstract vectors
-  + Nootigatthu et al.
-    * Just get the mean anonymous preference profile, Borda counted - don't bother with sampling - how many times does the "voted" decision agree with my ML model's decision? this would be true accuracy - see section 6.1
 - Replicate for the kidney exchange problem
   + Write general heuristics matching common user preferences
+    <!-- * The 30 y/o -->
+    <!-- * The lesser drinker -->
+    <!-- * young and drinking still beats older -->
+    * no health problems
+    * the person in most need of hope
+    * younger, but alcohol over cancer
   + Compare user choices using same methods as in MM case
   + Repeat Freedman's kidney simulation, but with randomly generated patient profiles instead - basically can just copy methods from her paper, Dickerson's code
 - Write up Snorkel in a research paper - see [paper outline](#paper-outline)
   + What's missing in this draft?
   + What use cases could complement best?
 - [By next Williams meet] Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?
+  + Basically, Snorkel is better for NOT these use cases - for these use cases, the moral preferences are easier
   + Is there a bail dataset I could use?
   + Potentially useful source of datasets: http://www.preflib.org/
   + Is there a use case that isn't in the form of a pairwise comparison? MM is nice because it's not just preference learning - it's conditional preference learning (crossing light, barrier, etc.)
@@ -644,6 +658,13 @@ Decided to roll back to old version if possible... causing issues
   + Find more ethical algorithm use cases in the literature - maybe start with that one ethical alg lit review with the collective/individual taxonomy - try to find examples from each category in the taxonomy
   + Preferably a text/NLP problem
   + Maybe housing allocation for the homeless?
+- Replicate some other models for an MM baseline (to better compare performance - only way to know if actually comparable)
+  + Kim et al.
+    * Try to reproduce Figure 8 (out of sample individual voter predictions) - for each of their benchmark models - note that they sample a very low number of respondents, this may affect results
+    ~ Rewrite regular analysis to use abstract vectors as well - much simpler, but requires LF re-write
+      - Need to fix some of the labeling functions - inexplicable drop in LF model accuracy after simplification to abstract vectors
+  + Nootigatthu et al.
+    * Just get the mean anonymous preference profile, Borda counted - don't bother with sampling - how many times does the "voted" decision agree with my ML model's decision? this would be true accuracy - see section 6.1
 - Develop a combined method with Snorkel and pairwise preference learning - i.e. try to apply a regression (learning to rank, basically) ML model to LF output
   + Basically, develop some social choice methods for "fairly" combining LFs - e.g. let's say you have LFs from the nurses, the doctors, the patients, and the hospital admins; how to reconcile conflicts algorithmically? (and validate?)
   + Idea: Add a method for strategically weighting heuristics based on the expert's "strength of belief" in them
