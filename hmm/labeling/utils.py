@@ -28,9 +28,10 @@ def choose_barrier(x, reverse=False):
 
     :param reverse: If false, choose to hit the barrier. Else choose not to.
     """
-    if x["Passenger_noint"] and x["Passenger_int"]: return -1
-    elif x["Passenger_noint"]: return 1 if not reverse else 0
-    elif x["Passenger_int"]: return 0 if not reverse else 1
+    if x["Passenger_noint"] == 0 and x["Passenger_int"] == 0: return -1
+    if x["Passenger_noint"] == 1 and x["Passenger_int"] == 1: return -1
+    elif x["Passenger_noint"] == 1: return 1 if not reverse else 0
+    elif x["Passenger_int"] == 1: return 0 if not reverse else 1
     return -1
 
 def count_characters(x, suffix, characters):

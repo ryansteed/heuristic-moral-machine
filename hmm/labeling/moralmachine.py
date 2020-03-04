@@ -7,6 +7,12 @@ from ..classification import *
 :param x: a DataFrame containing all the fields of the input DataFrame for two ethical alternatives
 :returns: whether or not to intervene (0 or 1); -1 to abstain
 """
+# don't intervene
+SAVE_NOINT = NOINT = 0
+# intervene
+SAVE_INT = INT = 1
+# abstain
+ABSTAIN = -1
 
 @labeling_function()
 def doctors(x):
@@ -28,7 +34,7 @@ def utilitarian(x):
 
 @labeling_function()
 def utilitarian_anthro(x):
-    """Save the most lives."""
+    """Save the most human lives."""
     max_hoomans = np.array([
         x["Human_{}".format(suffix)]
         for suffix in ['noint', 'int']
@@ -76,44 +82,50 @@ def status(x):
 @labeling_function()
 def legal(x):
     """Do not hit the pedestrians if the pedestrians are crossing legally."""
-    # if the option is between pedestrians and an AV
-    if (x["Passenger_int"] or x["Passenger_noint"]):
-        # if crossing is explicitly legal (green light) for the pedestrians
-        if (x["Law Abiding_int"] or x["Law Abiding_noint"]):
-            # choose the barrier alternative, if it exists
-            return choose_barrier(x)
-    # otherwise it's peds vs peds - prefer the one following the law
-    else:
+    # if passenger vs passenger (shouldn't be possible)
+    if x["Passenger_int"] == 1 and x["Passenger_noint"] == 1:
+        return -1
+    # otherwise if it's peds vs peds, prefer the one following the law
+    elif x["Passenger_int"] == 0 and x["Passenger_noint"] == 0:
         # if crossing scenario is the same for both groups, abstain
         if (x["Law Abiding_noint"] == x["Law Abiding_int"] and x["Law Violating_int"] == x["Law Violating_noint"]):
             return -1
-        # if one group is crossing illegally, choose against that group
-        if x["Law Violating_int"]:
-            return SAVE_NOINT
-        if x["Law Violating_noint"]:
+        # if one group is crossing legally, choose that group
+        if x["Law Abiding_int"] == 1:
             return SAVE_INT
-        return -1
+        if x["Law Abiding_noint"] == 1:
+            return SAVE_NOINT
+    # if the option is between pedestrians and an AV
+    else:
+        # if crossing is explicitly legal (green light) for the pedestrians
+        if (x["Law Abiding_int"] == 1):
+            return SAVE_INT
+        if (x["Law Abiding_noint"] == 1):
+            return SAVE_NOINT
     return -1
 
 @labeling_function()
 def illegal(x):
     """Save the passengers if the pedestrians are crossing illegally."""
     # if passenger vs passenger (shouldn't be possible)
-    if x["Passenger_int"] and x["Passenger_noint"]:
+    if x["Passenger_int"] == 1 and x["Passenger_noint"] == 1:
         return -1
     # if ped v ped
-    elif not (x["Passenger_int"] and x["Passenger_noint"]):
+    elif x["Passenger_int"] == 0 and x["Passenger_noint"] == 0:
+        # abstain if both are law violating
+        if x["Law Violating_noint"] == 1 and x["Law Violating_int"] == 1:
+            return -1
         # return 1 if noint is law violating, 0 if not
-        if x["Law Violating_noint"]:
+        elif x["Law Violating_noint"] == 1:
             return 1
-        if x["Law Violating_int"]:
+        if x["Law Violating_int"] == 1:
             return 0
     # if the choice is between an AV and pedestrians
     else:
         # if the pedestrian group is crossing illegally
-        if x["Law Violating_int"]:
+        if x["Law Violating_int"] == 1:
             return 0
-        if x["Law Violating_noint"]:
+        if x["Law Violating_noint"] == 1:
             return 1
     return -1
 
@@ -158,6 +170,6 @@ def spare_strollers(x):
 
 @labeling_function()
 def spare_pregnant(x):
-    """Spare the pregnant at all cost."""
+    """Spare tfavohe pregnant at all cost."""
     return spare_group(x, ["Pregnancy"])
 

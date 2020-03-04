@@ -67,11 +67,11 @@ class LabelingFunctionTestCase(unittest.TestCase):
 			self.assertEqual(SAVE_NOINT, inaction(self.generate_df_random()))
 
 	def test_pedestrians(self):
-		self.assertEqual(SAVE_NOINT, pedestrians(self.generate_df_random({
+		self.assertEqual(SAVE_INT, pedestrians(self.generate_df_random({
 			"Passenger_int": 0,
 			"Passenger_noint": 1
 		})))
-		self.assertEqual(SAVE_INT, pedestrians(self.generate_df_random({
+		self.assertEqual(SAVE_NOINT, pedestrians(self.generate_df_random({
 			"Passenger_int": 1,
 			"Passenger_noint": 0
 		})))
@@ -147,16 +147,24 @@ class LabelingFunctionTestCase(unittest.TestCase):
 			"Law Abiding_noint": 0,
 			"Law Violating_int": 0,
 			"Law Violating_noint": 0,
-			"Passenger_noint": 0,
-			"Passenger_int": 1
+			"Passenger_noint": 1,
+			"Passenger_int": 0
 		})))
 		self.assertEqual(NOINT, legal(self.generate_df_random({
+			"Law Abiding_int": 0,
+			"Law Abiding_noint": 1,
+			"Law Violating_int": 0,
+			"Law Violating_noint": 0,
+			"Passenger_int": 1,
+			"Passenger_noint": 0
+		})))
+		self.assertEqual(ABSTAIN, legal(self.generate_df_random({
 			"Law Abiding_int": 1,
-			"Law Abiding_noint": 0,
+			"Law Abiding_noint": 1,
 			"Law Violating_int": 0,
 			"Law Violating_noint": 0,
 			"Passenger_int": 0,
-			"Passenger_noint": 1
+			"Passenger_noint": 0
 		})))
 
 	def test_illegal(self):
@@ -172,13 +180,13 @@ class LabelingFunctionTestCase(unittest.TestCase):
 			"Passenger_noint": 0,
 			"Passenger_int": 0
 		})))
-		self.assertEqual(NOINT, illegal(self.generate_df_random({
+		self.assertEqual(INT, illegal(self.generate_df_random({
 			"Law Violating_int": 0,
 			"Law Violating_noint": 1,
 			"Passenger_noint": 0,
 			"Passenger_int": 1
 		})))
-		self.assertEqual(INT, illegal(self.generate_df_random({
+		self.assertEqual(NOINT, illegal(self.generate_df_random({
 			"Law Violating_int": 1,
 			"Law Violating_noint": 0,
 			"Passenger_int": 0,
