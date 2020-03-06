@@ -1,10 +1,27 @@
 library(ggplot2)
 library(tidyverse)
 library(ggrepel)
+library(dplyr)
+library(tidyr)
+library(repurrrsive)
 
 primary_bold = "#1f78b4"
 primary_light = "#C1DAEA"
 secondary = "#6a3d9a"
+secondary_light  = "#BBA6D1"
+
+format_lf_name = function(d) {
+  x = gsub("_", " ", d)
+  if (x == "utilitarian anthro") return("utilitarian (human)")
+  if (x %in% c("youth", "doctors", "females", "elderly")) return(paste("save", x))
+  if (x %in% c("pets", "homeless", "criminals")) return(paste("sacrifice", x))
+  if (x=="action") return("always intervene")
+  if (x=="status") return("favor executives")
+  if (x=="legal") return("favor legal crossing")
+  if (x=="illegal") return("disfavor illegal crossing")
+  if (x=="pred") return("Generative Model")
+  return(x)
+}
 
 ## Frequency plots ##
 freq_scenario = read.csv("figures/data/freq_scenario.csv")
@@ -13,11 +30,10 @@ freq_country = read.csv("figures/data/freq_countries.csv")
 
 ggplot(freq_character, aes(x=reorder(X, frequency), y=frequency)) + 
   geom_bar(stat="identity") + 
-  geom_col(fill=primary_bold) + 
+  geom_col(fill=primary_light, color=primary_bold) + 
   xlab("Character") +
   ylab("Frequency") +
   coord_flip() +
-  theme_minimal() +
   theme(
     axis.text.y = element_text(face="bold"),
     axis.title.x = element_text(face="bold"),
@@ -35,11 +51,10 @@ df = rbind(de, df)
 
 ggplot(df, aes(x=X, y=UserCountry3)) + 
   geom_bar(stat="identity") + 
-  geom_col(fill=secondary) + 
+  geom_col(fill=secondary_light, color=secondary) + 
   xlab("Character") +
   ylab("Frequency") +
   coord_flip() +
-  theme_minimal() +
   theme(
     axis.text.y = element_text(face="bold", size=12),
     axis.title.x = element_text(face="bold", size=12),
@@ -47,21 +62,62 @@ ggplot(df, aes(x=X, y=UserCountry3)) +
   )
 ggsave('figures/freq_countries.png', width=4, height=6)
 
+mm_perturb = read.csv("figures/data/mm-perturb.csv")
+mm_perturb$formatted = mapply(format_lf_name, mm_perturb$heuristic)
+mm_perturb$color = rep(primary_bold, nrow(mm_perturb))
+mm_perturb$fill = rep(primary_light, nrow(mm_perturb))
+mm_perturb$color[mm_perturb$value_added <= 0] = secondary
+mm_perturb$fill[mm_perturb$value_added <= 0] = secondary_light
+ggplot(mm_perturb, aes(x=reorder(formatted, value_added), y=value_added)) + 
+  geom_bar(stat="identity") + 
+  geom_col(fill=mm_perturb$fill, color=mm_perturb$color) + 
+  ylab("Accuracy Gain") +
+  coord_flip() +
+  theme(
+    axis.text.y = element_text(face="bold", size=12),
+    axis.title.x = element_text(face="bold", size=12),
+    axis.title.y = element_blank()
+  )
+ggsave("figures/mm-perturb.png", width=5, height=5)
+
+## Faceted Bar ##
+preds_scenario = read.csv("figures/data/mm-preds_scenario.csv")
+# need to calculate accuracy per scenario
+to_calc = setdiff(colnames(preds_scenario), c("scenario", "actual", "X"))
+acc_t = preds_scenario %>%
+  group_by(scenario) %>%
+  summarise_at(vars(!!to_calc), funs(
+    sum(. == actual) / (n() - sum(. == -1))
+  ))
+## TODO add error bars with a proportion confidence interval https://stackoverflow.com/questions/17810684/in-ggplot2-how-can-i-make-a-bar-chart-of-proportions-across-factors-and-add-er
+acc <- data.frame(t(acc_t[-1]))
+colnames(acc) <- acc_t$scenario
+acc$lf <- row.names(acc)
+accs = acc %>% gather(scenario, acc, Age:Utilitarian) %>% drop_na()
+accs$lf = factor(accs$lf, levels=c(c("preds"), setdiff(colnames(preds_scenario), c("preds"))))
+accs$lf_formatted = mapply(format_lf_name, accs$lf)
+accs$lf_formatted = factor(accs$lf_formatted, levels=c(setdiff(unique(accs$lf_formatted), c("Generative Model")), c("Generative Model")))
+accs$fill = rep(primary_light, nrow(accs))
+accs$fill[accs$lf_formatted == "Generative Model"] = secondary_light
+accs$color = rep(primary_bold, nrow(accs))
+accs$color[accs$lf_formatted == "Generative Model"] = secondary
+ggplot(accs, aes(x=lf_formatted, y=acc)) +
+  geom_bar(stat="identity",position="dodge") +
+  facet_wrap(~ scenario, ncol=2) +
+  geom_col(fill=accs$fill, color=accs$color) +
+  coord_flip() +
+  labs(x="Accuracy", "Heuristic") +
+  theme(
+    axis.text.y = element_text(size=8, face=c(rep("plain", 17), "bold")),
+    axis.title.x = element_text(size=8)
+  )
+ggsave('figures/mm-preds_scenario.png', width=7, height=9)
+
 
 ## Scatters ##
 lfanalysis_weighted = read.csv("figures/data/mm-weights.csv")
-format_lf_name = function(x) {
-  x = gsub("_", " ", x)
-  if (x == "utilitarian anthro") return("utilitarian (human)")
-  if (x %in% c("youth", "doctors", "females")) return(paste("save", x))
-  if (x %in% c("pets", "homeless", "criminals")) return(paste("sacrifice", x))
-  if (x=="inaction") return("intervene")
-  if (x=="status") return("favor executives")
-  if (x=="legal") return("favor legal crossing")
-  if (x=="illegal") return("disfavor illegal crossing")
-  return(x)
-}
-lfanalysis_weighted$X = lapply(lfanalysis$X, format_lf_name)
+lfanalysis_weighted$X = factor(lfanalysis_weighted$X, levels=unique(lfanalysis_weighted$X))
+lfanalysis_weighted$X_formatted = mapply(format_lf_name, lfanalysis_weighted$X)
 lfanalysis_weighted$Weight = lfanalysis_weighted$weight
 ggplot(lfanalysis_weighted, aes(x=Coverage, y=Emp..Acc., size=Weight)) +
   geom_point(fill=primary_light, colour=primary_bold, shape=21, stroke=1) +
@@ -69,8 +125,21 @@ ggplot(lfanalysis_weighted, aes(x=Coverage, y=Emp..Acc., size=Weight)) +
   labs(y="Accuracy", x="Coverage") +
   ggtitle("Heuristic Accuracy vs. Coverage") +
   theme(legend.position=c(.90, .70)) +
-  geom_label_repel(aes(label=X), size=3, box.padding=0.75, point.padding=0.5)
+  geom_label_repel(aes(label=X_formatted), size=3, box.padding=0.75, point.padding=0.5)
 ggsave('figures/mm-weights.png', width=7.5, height=7.5)
+
+## Lines ##
+accs = read.csv("figures/data/mm-accs_voters.csv")
+ggplot(data = accs, mapping=aes(x=n_voters)) +
+  geom_point(aes(y=acc_gold), color=primary_light) +
+  geom_point(aes(y=acc_heuristic), color=secondary_light) +
+  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~sqrt(x))) +
+  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~sqrt(x))) +
+  scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels")) +
+  theme(legend.position=c(.75, .25)) +
+  labs(y="Accuracy", x="Number of Respondents")
+  # scale_x_log10()
+ggsave("figures/mm-accs_voter.png", width=6, height=6)
 
 ## Histograms ##
 L = read.csv("figures/data/mm-density.csv")
@@ -79,7 +148,8 @@ find_density = function(x) {
 }
 L$density = apply(L, 1, find_density)
 ggplot(L, aes(x=density)) +
-  geom_density(color="#1f78b4", fill="#C1DAEA", adjust=1.5) +
-  labs(y="Smoothed Density", x="Non-Abstaining Heuristic Functions") +
-  theme_minimal()
+  geom_density(color=primary_bold, fill=primary_light, adjust=1.5) +
+  labs(y="Smoothed Density", x="Non-Abstaining Heuristic Functions")
 ggsave('figures/mm-density.png', width=3, height=3)
+
+
