@@ -42,9 +42,9 @@ def utilitarian_anthro(x):
     return choose_max(max_hoomans)
 
 @labeling_function()
-def inaction(x):
-    """Never intervene."""
-    return 0
+def action(x):
+    """Always intervene."""
+    return 1
 
 @labeling_function()
 def pedestrians(x):
@@ -137,6 +137,15 @@ def youth(x):
         for suffix in ['noint', 'int']
     ])
     return choose_max(num_children)
+
+@labeling_function()
+def elderly(x):
+    """Save the most elderly people."""
+    num_elderly = np.array([
+        count_characters(x, suffix, ["Old"])
+        for suffix in ['noint', 'int']
+    ])
+    return choose_max(num_elderly)    
 
 @labeling_function()
 def criminals(x):

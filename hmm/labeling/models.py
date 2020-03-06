@@ -45,17 +45,17 @@ class Labeler:
 		if verbose: print(f"{str(model)} {'Vote Accuracy:':<25} {acc*100:.1f}")
 		return acc
 
-	def get_preds(self, L_dev, y_dev):
+	def get_preds(self, L_dev):
 		threshold = 0.5
 		probs_dev = self.model.predict_proba(L=L_dev)
 		return probs_dev >= threshold
 
 	def get_label_buckets(self, L_dev, y_dev):
-		preds_dev = self.get_preds(L_dev, y_dev)
+		preds_dev = self.get_preds(L_dev)
 		return get_label_buckets(y_dev.values, preds_dev[:, 1])
 
 	def get_confusion_matrix(self, L_dev, y_dev):
-		preds_dev = self.get_preds(L_dev, y_dev)
+		preds_dev = self.get_preds(L_dev)
 		return pd.crosstab(y_dev.values.astype(bool), preds_dev[:, 1], rownames=['Actual'], colnames=['Predicted'])
 
 	def filter_probs(self, X, L):
