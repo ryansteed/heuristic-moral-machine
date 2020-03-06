@@ -635,42 +635,122 @@ Gonna do other things first and ask Williams about it
 
 Problem with kidney example - this is basically just a rules-based model... actually a little better than rules-based, but still
 
-## TODO
+5 points worse than Freedman's learned weights with just three simple LFs and the label model... ML model brings it within 3.5 points
+
 - Replicate for the kidney exchange problem
-  + Write general heuristics matching common user preferences
+  <!-- + Write general heuristics matching common user preferences -->
     <!-- * The 30 y/o -->
     <!-- * The lesser drinker -->
     <!-- * young and drinking still beats older -->
-    * no health problems
+    <!-- * no health problems -->
     * the person in most need of hope
-    * younger, but alcohol over cancer
-  + Compare user choices using same methods as in MM case
-  + Repeat Freedman's kidney simulation, but with randomly generated patient profiles instead - basically can just copy methods from her paper, Dickerson's code
-- Write up Snorkel in a research paper - see [paper outline](#paper-outline)
+  <!-- + Compare user choices using same methods as in MM case -->
+  <!-- + Use Freedman weights to make pairwise choices and compare -->
+
+## 03 Feb 20
+
+### Case study search
+What I'm looking for:
++ Basically, Snorkel is better for NOT these use cases - for these use cases, the moral preferences are easier
++ Is there a use case that isn't in the form of a non-contingent pairwise comparison? MM is nice because it's not just preference learning - it's conditional preference learning (crossing light, barrier, etc.)
++ Need something really complicated for Snorkel to shine - text, or tons of variables (traffic data?) - but how to define a moral situation? are moral situations, because they are marginal, naturally simple? or has no one bothered to draw them out
++ Preferably a text/NLP problem
+
+Some notes from this [lit review](https://www.mendeley.com/viewer/?fileId=5fda3a71-4583-b303-3592-23b4092a9e9b&documentId=5e8205c2-af24-3b54-adc6-c30f938c8964):
+
+Anderson and Anderson (2014) have done some of the work on taxonomizing ethical dilemmas - built a tool, but kinda useless
+Important thing is that Anderson and Anderson emphasize expert review
+
+Dehghani use first-principles and analogous reasoning - they test on pscyhological sentences, e.g.
+> In a restaurant, a bomb threatens to kill 9 guests. The bomb  could  be  thrown  onto  the  patio,  where  1  guest would be killed.
+
+Conitzer et al. (2017) metnions that main challenge in machine learning decision-making is framing ethical dilemmas in a generalizable way
+
+Clifford et al. try using psychological frameworks as a basis - our method doesn't require that
+
+Loreggia et al. try to reconcile exogenous ethical requirements and subjective 
+
+RL methods might be useful:
+Wu and Lin restrict themselves to ethical decisions independent - use stupid toy datasets
+
+No luck on new use cases in the lit review - MM is the most prominent, kidney not even mentioned
+
+Can we make this explainable?
+
+Preflib also unhelpful
+
+Bail data?
+
+Problem with bail data - mostly deals with racial bias...
+
+Criminal data would be better...
+
+Tried moral psychology review, nothing particularly compelling
+
+For Williams: best way to go is probably to write up current stuff; look for detailed dataset with a clearer picture of the state of the project
+
+## 04 Feb 20
+
+### Williams Meet
+
+Agenda
+- Case study ideas review
+  + Not actually many good *complicated* case studies
+  + Kidney exchange is nice because it's real world and at the margin - gonna look for real data there to test on - know there are toy sets, might focus on that
+  + Other ideas: bail data, moral psychology trials
+> Not surprising that we can do just as well - so make sure that's not the only way you're selling this
+> More clear that the expert opinion is wanted
+
+- Run through hierarchical bayes - mostly struggling with the inference step
+
+<!-- - **[2/4 AM] Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?** -->
+<!--   + Crawl this [lit review](https://www.mendeley.com/viewer/?fileId=5fda3a71-4583-b303-3592-23b4092a9e9b&documentId=5e8205c2-af24-3b54-adc6-c30f938c8964) -->
+  <!-- + Check out http://www.preflib.org/ -->
+<!-- - Define moral scenarios - where does this algorithm work
+  + Degree of contingency of preferences vsx   non-contingency (kidney vs moral machine)
+  + Idea of "independency" - when the moral decision is independent of other objectives -->
+
+
+#### what is a moral/ethical situation?
+
+Per Yu et al. lit review:
+> Ethical dilemmas refer to situations in which any available choice leads to infringing some accepted ethical principle and yet a decision has to be made
+
+
+## 25 Feb 20
+Writing the paper!! See `outline.md`
+
+
+## TODO
+- **Write up Snorkel in a research paper - see [paper outline](#paper-outline)**
+  ~ Write the draft using `outline.md`
   + What's missing in this draft?
   + What use cases could complement best?
-- [By next Williams meet] Look for use cases in Williams' papers (email), others - preferably high expertise and ripe for a survey experiment - what complicated ethical dilemmas exist that we could solve?
-  + Basically, Snorkel is better for NOT these use cases - for these use cases, the moral preferences are easier
-  + Is there a bail dataset I could use?
-  + Potentially useful source of datasets: http://www.preflib.org/
-  + Is there a use case that isn't in the form of a pairwise comparison? MM is nice because it's not just preference learning - it's conditional preference learning (crossing light, barrier, etc.)
-  + Need something really complicated for Snorkel to shine - text, or tons of variables (traffic data?) - but how to define a moral situation? are moral situations, because they are marginal, naturally simple? or has no one bothered to draw them out
-  + Find more ethical algorithm use cases in the literature - maybe start with that one ethical alg lit review with the collective/individual taxonomy - try to find examples from each category in the taxonomy
-  + Preferably a text/NLP problem
-  + Maybe housing allocation for the homeless?
-- Replicate some other models for an MM baseline (to better compare performance - only way to know if actually comparable)
+- **Replicate for the kidney exchange problem**
+  + Repeat Freedman's kidney simulation, but with randomly generated patient profiles instead - basically can just copy methods from her paper, Dickerson's code
+- **Replicate some other models for an MM baseline (to better compare performance - only way to know if actually comparable)**
   + Kim et al.
     * Try to reproduce Figure 8 (out of sample individual voter predictions) - for each of their benchmark models - note that they sample a very low number of respondents, this may affect results
     ~ Rewrite regular analysis to use abstract vectors as well - much simpler, but requires LF re-write
       - Need to fix some of the labeling functions - inexplicable drop in LF model accuracy after simplification to abstract vectors
   + Nootigatthu et al.
     * Just get the mean anonymous preference profile, Borda counted - don't bother with sampling - how many times does the "voted" decision agree with my ML model's decision? this would be true accuracy - see section 6.1
-- Develop a combined method with Snorkel and pairwise preference learning - i.e. try to apply a regression (learning to rank, basically) ML model to LF output
+- **Keep looking for other case studies**
+  + Non-independent moral scenarios?
+    * Martinho's "AI govenred society", in which AI systems choose between policies on moral grounds
+    * Is there a bail dataset I could use? Look for classic criminal justice FAT datasets - not concerned with quantitative fairness, though
+      - Check out COMPAS dataset
+    * Maybe housing allocation for the homeless?
+  + Look at psych literature - the trolley problem came from psych literature  
+    * If the psychologists could make up extremely complicated questions, what would they be?
+    * Ava Wright uses "killer is a minor" example
+- **Develop a combined method with Snorkel and pairwise preference learning - i.e. try to apply a regression (learning to rank, basically) ML model to LF output**
   + Basically, develop some social choice methods for "fairly" combining LFs - e.g. let's say you have LFs from the nurses, the doctors, the patients, and the hospital admins; how to reconcile conflicts algorithmically? (and validate?)
   + Idea: Add a method for strategically weighting heuristics based on the expert's "strength of belief" in them
 
 ## Future features
 - (Bonus) Train on abstract feature representations (see Kim et al.) instead of raw sparse data
+- (Bonus) Make this method explainable! Report which rules contributed to a label, and then to a decision
 - (Bonus) Find a use case in which slicing matters, and use Snorkel slicing approaches
 - (Bonus) Demonstrate half heuristic, half crowdsourcing approach with MM data https://www.snorkel.org/use-cases/crowdsourcing-tutorial
 - (Bonus) Compare effect sizes in label model to effect sizes in MM paper; compare also to weights obtained by Freedman in KE use case

@@ -1,39 +1,7 @@
 # Paper outline
-- Section on framing: what is a morality problem? what are some examples in industry? do we need to re-frame existing problems? (are all problems moral problems?)
-  + What constitutes a *moral* problem (as opposed to another preferences problem)
-  + show how this would look from regulator side, and from industry side - when would a regulator require this system?
-  + if we are treating these case studies as unrealistic representations, need to at least describe how this would translate to realistic representations
-- Heilmeier's catechism
-- Here is a new method
-  + Make it clear we are not trying to represent voter's responses - this is an alternate method
-- MM use case
-  + We tried creating labeling functions based on MM results (as if regular people were the experts)
-  + Here's how the label functions performed relative to real users, and here's how much less it cost
-    * How well does it agree on random scenarios? on all scenarios?
-  + When does this method disagree with Kim, Noothigattu and why?
-    * Highlight weaknesses of each method
-      - Kim: the same as the limits of utility function morality (what if there aren't estimatable moral variables? similar to KE example)
-      - Noothigattu: not very fast; probably super inaccurate, if we can manage to reproduce it
-      - Both: rely on democratic voter data
-- Kidney use case
-  + Same thing, but this time users explicitly told us their rationales; let's pretend they're trained experts
-  + Now how do the results compare?
-  + When does this method disagree and why?
-- Discuss benefits
-  + Cost - as demonstrated by comparability
-  + Zero-shot applications - theoretical argument about info gain from heuristics
-  + For highly complex scenarios when gathering training data is literally not feasible
-- Discuss drawbacks
-  + Barriers to entry (education)
-  + Demographic problem (smaller sample, less representative demographically) - experts must be proxies for larger populations
-  + Inherently problematic case studies - e.g. still limited by choice of representation of ethical dilemmas; implicit choice of moral status (what gets moral status?) by selection of features
-  + Succintly, moral machine is deliberately simplified
-- Mirror weak supervision trade-offs section of Snorkel paper
 
-
-## other helpful notes
-
-### Heilmeier's Catechism
+## Intro
+Heilmeier's catechism
 - What are you trying to do? Articulate your objectives using absolutely no jargon.
 > Build an algorithm/model to make moral decisions (in self-driving cars, in kidney exchange)
 - How is it done today, and what are the limits of current practice?
@@ -46,48 +14,159 @@
 > + Will make it possible to teach machines institutional morals (legal, cultural) directly
 > + Will make moral inputs more transparent
 > + Will make it easier to label real-world moral scenarios without actually showing the data to lots of people (privacy)
-- What are the risks?
-> + De-democratize moral decision-making - experts may be missing something valuable
-> + SME expertise may not compensate for lower sample size
-> + Labeling function may have less coverage than direct surveying - maybe people's heuristics differ from their actual behavior (do we trust experts to not have this quirk?)
-> + May be impossible to prove if this is working - how to prove labeling functions are honored?
-> + The requirements for being an SME labeler exclude certain groups from being able to provide input: The profile of the best performing user by F1 score was a MS or Ph.D. degree in any field, strong Python coding skills, and intermediate to advanced experience with machine learning (Snorkel). How to make this accessible to lower-educated, non Python coders?
-- How much will it cost?
-> + Time
-> + Data costs??
-- How long will it take?
-> + A long time... prototype done for thesis hopefuly
-- What are the mid-term and final “exams” to check for success?
-> + Midterm exam: Does this method functionally work? Are moral decisions comparable to existing methods?
-> + Final exam: Is this method better than existing methods? How to prove this?
+>
+> Use case where expert demographic problem might not be such an issue: e.g. decision-making by doctors
+>
+> Seems like this approach inherently easier to sell for scenarios where lots of expertise required (e.g. medical)
+> 
+> Even in a domain where data is already labeled, what if that data isn't labeled ethically? Could counterbalance with an ethical labeler
 
-### 16 Jan 19
+## Framing - what is a moral AI? (Problem Statement)
+- what is a morality problem? what are some examples in industry? do we need to re-frame existing problems? (are all problems moral problems?)
+- What constitutes a *moral* problem (as opposed to another preferences problem)
+- show how this would look from regulator side, and from industry side - when would a regulator require this system?
+- if we are treating these case studies as unrealistic representations, need to at least describe how this would translate to realistic representations
 
-Starting to see some problems:
-- There aren't enough heuristic functions to write here! This example is too simplistic (there aren't enough features to write sophisticated heuristics).
-  + UPDATE 20 Jan 20 - this problem is mostly solved
-- Even if I get some experts to give me heuristics, they'll 1) be simple, 2) be too if- based and have high coverage (more rules-based), 3) be hard to compare to Noothigattu because so different than the MM audience
+- Degree of contingency of preferences vsx   non-contingency (kidney vs moral machine)
+- Idea of "independency" - when the moral decision is independent of other objectives
 
-Things we might still be able to demonstrate:
+Per Yu et al. lit review:
+> Ethical dilemmas refer to situations in which any available choice leads to infringing some accepted ethical principle and yet a decision has to be made
+
+Specifically focusing on dilemmas - like Bonnefon
+
+"moral philosophy in intelligent machines"
+
+Would be good to reference James Moor here - see Stanford Phil Encyclopedia entry on Philosophy of AI - will be good for framing approaches in related work section
+
+## Related Work
+Mostly reflects Yu et al. review, Conitzer position paper
+Position this as a machine learning based collective framework
+
+### Moral Dilemmas
+
+### Moral AI
+
+#### Bottom Up
+
+
+Describe bottom up approaches
+
+Some general shortcomings:
+- representativeness
+- representation complexity problem
+
+#### Top Down
+
+Tensions in the literature (make each of these a section):
+### deontological vs. consequentialist (social welfare approaches, e.g. Wu?) vs. virtue
+deontic:
+- Wright
+- Davoust - contractual deontology
+consequentialist: social welfare approach (Lucy Wu?)
+virtue: ?? see lit review
+
+### Measuring Morals
+
+## Approach
+- Make it clear we are not trying to represent voter's responses - this is an alternate method
+- Definitely falls under consequentialist frame (not deontic or the other one)
+- Somewhere between massive emphasis on experts (reasoning systems, ideals) and voter estimation (democracy) - meta-system (combines mutliple appraoches to morality), but not totally democratic
+- Describe the method
+  + Reference Snorkel training/fitting steps, reproduce equations
+
+```latex
+\begin{enumerate}
+    \item \emph{Data programming:} Ask experts to source or create labeling functions to compare pairs of alternatives, or sets of alternatives (some optimization criterion). An alternative is simply a set of parameters (in autonomous vehicles, number of passengers and their gender, age, health, whether they follow the law).
+    \item \emph{Labeling:} Denoise the labeling functions to label a representative set of alternative choices.
+    \item \emph{Learning:} Learn the generative model's preferences - no need for summarization or voter aggregation.
+\end{enumerate}
+```
+
 - Ability of machine learning approach to generalize beyond experts' heuristics - provide a limited set of heuristics, then still achieve comparable performance.
 - A good goal: create some example where similar effect sizes to MM arise. A good strategy might be modeling several ethical camps and writing competing heuristic functions from the perspective of experts from these camps.
 
-### 21 Jan 20 - Williams
+## Experiments
 
-Is there a way to prove if this is more extensible (more generalizable) to zero-shot scenarios?
-Extrapolate beyond statistical value of life? For instance, regular ML model would value 100 y/o's less than heuristic model
+things to prove:
+- cheaper but just as good
+- reconciles conflicting viewpoints effectively
+- can add expertise of multiple specialists (USE CASE NEEDED)
+- interpretable labels, interpretable decisions - look at output for each heuristic individually to explain the decision made
+- combining moral heuristics with existing heuristics optimizing for other things
+- hierarchical feature represenations - go granular for some experts, but stay abstract for others - how to represent this to a machine learning model???
+- apply distant supervision???
 
-Use case where expert demographic problem might not be such an issue: e.g. decision-making by doctors
+### Moral Machine
+- We tried creating labeling functions based on MM results (as if regular people were the experts)
+  + Provide sample label functions
+- Here's how the label functions performed relative to real users, and here's how much less it cost
+  + How well does it agree on random scenarios? on all scenarios?
+- When does this method disagree with Kim, Noothigattu and why?
+  + Highlight weaknesses of each method
+    * Kim: the same as the limits of utility function morality (what if there aren't estimatable moral variables? similar to KE example)
+    * Noothigattu: not very fast; probably super inaccurate, if we can manage to reproduce it
+    * Both: rely on democratic voter data
 
-Seems like this approach inherently easier to sell for scenarios where lots of expertise required (e.g. medical)
+Results to present
+<!-- - Describe the method used to collect the data -->
+<!-- - Describing the datasets -->
+  <!-- + Number of votes -->
+  <!-- + Number of voters -->
+  <!-- + (KE) Number of votes per voter (for MM, fixed at 13) -->
+  <!-- + Frequency of each scenario (turns out to be about even, no fun) -->
+  <!-- + (MM) Frequency of occurrence by character -->
+<!-- - Describing the approach -->
+  <!-- + Labeling functions -->
+    <!-- * The functions themselves & their source -->
+    <!-- * Labeling density -->
+    <!-- * Labeling function agreement/disagrement plotted against coverage -->
+    <!-- * (KE) code the user responses into heuristics ('expresses a preference for ___ heuristic') -->
+  + Labeling model: rate of agreement (accuracy) with voters (if we assume voters are actually experts, then this is the accuracy of our method; otherwise, examine the differences)
+    <!-- * Rate of agreement per labeling function -->
+    <!-- * (MM) Rate of agreement per labeling function, per scenario type -->
+    <!-- * Total rate of agreement -->
+    <!-- * The final estimated weight vector -->
+    * (MM) Qualitative assessment of disagreement by scenario type
+    * Labeling model perturbations - how does dropping each LF affect accuracy?
+    * Qualitative assessment of disagreement by labeling function
+    <!-- * Trade off between label model, majority voter -->
+    * (KE) Bonus experiment: try weighting by heuristic frequency
+  + Discriminative model: rate of agreement
+    * Accuracy as data size increases (compare both gold label model and heuristic model - if data is low, does heuristic over-perform?)
+    * By number of voters
+    * By number of votes from each voter
+    * (MM) Random scenarios vs. special scenarios
+    * Accuracy with the addition of invented data (Cite Snorkel paper section 4.1.4)
+    * Compare to reported statistics for baseline models (Kim, Noothigattu, Freedman)
 
-### 28 Jan 20
+## Discussion
+- Discuss benefits
+  + Cost - as demonstrated by comparability
+  + Zero-shot applications - theoretical argument about info gain from heuristics
+  + For highly complex scenarios when gathering training data is literally not feasible
+  + See other benefits in Heilmeier's catechism
+- Discuss drawbacks
+  + Barriers to entry (education)
+  + Demographic problem (smaller sample, less representative demographically) - experts must be proxies for larger populations
+  + Inherently problematic case studies
+    * e.g. still limited by choice of representation of ethical dilemmas (critical race theory is an example)
+    * implicit choice of moral status (what gets moral status?) by selection of features
+    * not practically relevant (marginal)
+    * many professionals say that these types of features shouldn't even be considered; just choose based on likelihood of survival, or randomly if necessary
+  + Succintly, moral machine is deliberately simplified
+  + De-democratize moral decision-making - experts may be missing something valuable
+  + SME expertise may not compensate for lower sample size
+  + Labeling function may have less coverage than direct surveying - maybe people's heuristics differ from their actual behavior (do we trust experts to not have this quirk?)
+  + May be impossible to prove if this is working - how to prove labeling functions are honored?
+  + The requirements for being an SME labeler exclude certain groups from being able to provide input: The profile of the best performing user by F1 score was a MS or Ph.D. degree in any field, strong Python coding skills, and intermediate to advanced experience with machine learning (Snorkel). How to make this accessible to lower-educated, non Python coders?
+- Mirror weak supervision trade-offs section of Snorkel paper
+- Future work
+  + Suggest intelligent active learning approach during labeling process (an interface that shows datapoints not covered, or datapoints with high conflict)
+  + Human-in-the-loop system, at least for training
+  + MOST IMPORTANT: INCLUDE ETHICAL AND "TECHNICAL" HEURISTICS IN SAME LABEL MODEL
+  + Eventually generalize to some more universal principles?
+  + Hierarchical feature represenations - go granular for some experts, but stay abstract for others - how to represent this to a machine learning model?
 
-An interesting framing: moral decisions are those that replace choosing randomly when all alternatives have equal cost, according to the regular problem solving solution
-
-This definition falls short, though - sometimes the difference in cost is outweighed by the moral considerations
-
-So are then those moral considerations ingrained in the cost function? this is the utility max approach to moral AI
-
-What makes this different from a regular machine learning problem?
-- Experts should probably be equally weighted? Some sort of social choice considerations are necessary
+## Conclusion
+Restate Heilmeier's catechism - call for heuristic approaches
