@@ -1,4 +1,4 @@
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
@@ -40,6 +40,9 @@ class Classifier:
 		test_acc = metric_score(golds=y, preds=preds_test_dev, metric="accuracy")
 		if verbose: print(f"Test Accuracy: {test_acc * 100:.1f}%")
 		return test_acc
+    
+#     def cross_val(self, X, y, cv=5, verbose=True):
+#         return cross_validate(self.clf, X, y, cv=cv, verbose=verbose)
 
 
 def train_test_val_dev_split(X, y):
