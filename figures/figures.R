@@ -9,6 +9,10 @@ primary_bold = "#1f78b4"
 primary_light = "#C1DAEA"
 secondary = "#6a3d9a"
 secondary_light  = "#BBA6D1"
+tertiary = "#F991CC"
+tertiary_light = "#FCD7EC"
+muted = "grey60"
+muted_light = "grey75"
 
 format_lf_name = function(d) {
   x = gsub("_", " ", d)
@@ -23,6 +27,8 @@ format_lf_name = function(d) {
   return(x)
 }
 
+
+####################################################################
 ## Frequency plots ##
 freq_scenario = read.csv("figures/data/freq_scenario.csv")
 freq_character = read.csv("figures/data/freq_character.csv")
@@ -80,6 +86,8 @@ ggplot(mm_perturb, aes(x=reorder(formatted, value_added), y=value_added)) +
   )
 ggsave("figures/mm-perturb.png", width=5, height=5)
 
+
+####################################################################
 ## Faceted Bar ##
 preds_scenario = read.csv("figures/data/mm-preds_scenario.csv")
 # need to calculate accuracy per scenario
@@ -114,6 +122,7 @@ ggplot(accs, aes(x=lf_formatted, y=acc)) +
 ggsave('figures/mm-preds_scenario.png', width=7, height=9)
 
 
+####################################################################
 ## Scatters ##
 lfanalysis_weighted = read.csv("figures/data/mm-weights.csv")
 lfanalysis_weighted$X = factor(lfanalysis_weighted$X, levels=unique(lfanalysis_weighted$X))
@@ -128,19 +137,88 @@ ggplot(lfanalysis_weighted, aes(x=Coverage, y=Emp..Acc., size=Weight)) +
   geom_label_repel(aes(label=X_formatted), size=3, box.padding=0.75, point.padding=0.5)
 ggsave('figures/mm-weights.png', width=7.5, height=7.5)
 
+## not very good - deprecated
+#
+# lf_analysis_weighted_ke = read.csv("figures/data/ke-weights.csv")
+# lf_analysis_weighted_ke$X = factor(lf_analysis_weighted_ke$X, levels=unique(lf_analysis_weighted_ke$X))
+# lf_analysis_weighted_ke$X_formatted = mapply(format_lf_name, lf_analysis_weighted_ke$X)
+# lf_analysis_weighted_ke$Weight = lf_analysis_weighted_ke$weight
+# ggplot(lf_analysis_weighted_ke, aes(x=Coverage, y=Emp..Acc., size=Weight)) +
+#   geom_point(fill=primary_light, colour=primary_bold, shape=21, stroke=1) +
+#   scale_size_continuous(range = c(1,15)) +
+#   labs(y="Accuracy", x="Coverage") +
+#   ggtitle("Heuristic Accuracy vs. Coverage") +
+#   theme(legend.position=c(.90, .70)) +
+#   geom_label_repel(aes(label=X_formatted), size=3, box.padding=0.75, point.padding=0.5)
+# ggsave('figures/ke-weights.png', width=5, height=5)
+
+####################################################################
 ## Lines ##
 accs = read.csv("figures/data/mm-accs_voters.csv")
 ggplot(data = accs, mapping=aes(x=n_voters)) +
   geom_point(aes(y=acc_gold), color=primary_light) +
   geom_point(aes(y=acc_heuristic), color=secondary_light) +
-  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~sqrt(x))) +
-  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~sqrt(x))) +
+  geom_ribbon(aes(ymin=acc_gold-1.96*std_gold, ymax=acc_gold+1.96*std_gold), fill=muted, alpha=alpha) +
+  geom_ribbon(aes(ymin=acc_heuristic-1.96*std_heuristic, ymax=acc_heuristic+1.96*std_heuristic), fill=muted, alpha=alpha) +
+  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~x), se=T) +
+  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~x), se=T) +
   scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels")) +
+  scale_y_continuous(breaks=round(seq(0.4, 0.8, by=0.05), 2), limits=c(0.4, 0.8)) +
   theme(legend.position=c(.75, .25)) +
-  labs(y="Accuracy", x="Number of Respondents")
-  # scale_x_log10()
+  labs(y="Accuracy", x="Number of Respondents") +
+  ggtitle("Discriminative Accuracy vs. Number of Respondents")
 ggsave("figures/mm-accs_voter.png", width=6, height=6)
 
+accs_ke = read.csv("figures/data/ke-accs_voters.csv")
+ggplot(data = accs_ke, mapping=aes(x=n_voters)) +
+  geom_point(aes(y=acc_gold), color=primary_light) +
+  geom_point(aes(y=acc_heuristic), color=secondary_light) +
+  geom_ribbon(aes(ymin=acc_gold-1.96*std_gold, ymax=acc_gold+1.96*std_gold), fill=muted, alpha=alpha) +
+  geom_ribbon(aes(ymin=acc_heuristic-1.96*std_heuristic, ymax=acc_heuristic+1.96*std_heuristic), fill=muted, alpha=alpha) +
+  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~x), se=T) +
+  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~x), se=T) +
+  scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels")) +
+  scale_y_continuous(breaks=round(seq(0.6, 1.0, by=0.05), 2), limits=c(0.6, 1.0)) +
+  theme(legend.position=c(.75, .25)) +
+  labs(y="Accuracy", x="Number of Respondents") +
+  ggtitle("Discriminative Accuracy vs. Number of Respondents")
+ggsave("figures/ke-accs_voter.png", width=6, height=6)
+
+accs_n = read.csv("figures/data/mm-accs_data.csv")
+alpha = .25
+ggplot(data = accs_n, mapping=aes(x=n_rows)) +
+  geom_point(aes(y=acc_gold), color=primary_light) +
+  geom_point(aes(y=acc_heuristic), color=secondary_light) +
+  geom_ribbon(aes(ymin=acc_gold-1.96*std_gold, ymax=acc_gold+1.96*std_gold), fill=muted, alpha=alpha) +
+  geom_ribbon(aes(ymin=acc_heuristic-1.96*std_heuristic, ymax=acc_heuristic+1.96*std_heuristic), fill=muted, alpha=alpha) +
+  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~sqrt(x)), se=F) +
+  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~sqrt(x)), se=F) +
+  scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels")) +
+  scale_y_continuous(breaks=round(seq(0.4, 0.9, by=0.05), 2), limits=c(0.4, 0.9)) +
+  theme(legend.position=c(.75, .25)) +
+  labs(y="Accuracy", x="Training Set Size") +
+  ggtitle("Discriminative Accuracy vs. Size of Training Set")
+ggsave("figures/mm-accs_data.png", width=6, height=6)
+
+accs_n_ke = read.csv("figures/data/ke-accs_data.csv")
+ggplot(data = accs_n_ke, mapping=aes(x=n_rows)) +
+  geom_point(aes(y=acc_gold), color=primary_light) +
+  geom_point(aes(y=acc_heuristic), color=secondary_light) +
+  geom_point(aes(y=acc_freedman), color=tertiary_light) +
+  geom_ribbon(aes(ymin=acc_gold-1.96*std_gold, ymax=acc_gold+1.96*std_gold), fill=muted, alpha=alpha) +
+  geom_ribbon(aes(ymin=acc_heuristic-1.96*std_heuristic, ymax=acc_heuristic+1.96*std_heuristic), fill=muted, alpha=alpha) +
+  geom_ribbon(aes(ymin=acc_freedman-1.96*std_freedman, ymax=acc_freedman+1.96*std_freedman), fill=muted, alpha=alpha) +
+  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~x), se=F) +
+  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~x), se=F) +
+  geom_smooth(aes(y=acc_freedman,  color=tertiary), formula=(y~x), se=F) +
+  scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels", "Freedman et al.")) +
+  scale_y_continuous(breaks=round(seq(0.5, 1.0, by=0.05), 2), limits=c(0.5, 1.0)) +
+  theme(legend.position=c(.75, .25)) +
+  labs(y="Accuracy", x="Training Set Size") +
+  ggtitle("Discriminative Accuracy vs. Size of Training Set")
+ggsave("figures/ke-accs_data.png", width=6, height=6)
+
+F####################################################################
 ## Histograms ##
 L = read.csv("figures/data/mm-density.csv")
 find_density = function(x) {
@@ -150,6 +228,13 @@ L$density = apply(L, 1, find_density)
 ggplot(L, aes(x=density)) +
   geom_density(color=primary_bold, fill=primary_light, adjust=1.5) +
   labs(y="Smoothed Density", x="Non-Abstaining Heuristic Functions")
-ggsave('figures/mm-density.png', width=3, height=3)
+ggsave('figures/mm-density.png', width=4, height=4)
+
+ke = read.csv("figures/data/ke-density.csv")
+ke$density = apply(ke, 1, find_density)
+ggplot(ke, aes(x=density)) +
+  geom_histogram(binwidth=1, color=primary_bold, fill=primary_light) +
+  labs(y="Density", x="Non-Abstaining Heuristic Functions")
+ggsave('figures/ke-density.png', width=3, height=4)
 
 

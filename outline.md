@@ -113,7 +113,6 @@ Results to present
 <!-- - Describing the datasets -->
   <!-- + Number of votes -->
   <!-- + Number of voters -->
-  <!-- + (KE) Number of votes per voter (for MM, fixed at 13) -->
   <!-- + Frequency of each scenario (turns out to be about even, no fun) -->
   <!-- + (MM) Frequency of occurrence by character -->
 <!-- - Describing the approach -->
@@ -122,23 +121,25 @@ Results to present
     <!-- * Labeling density -->
     <!-- * Labeling function agreement/disagrement plotted against coverage -->
     <!-- * (KE) code the user responses into heuristics ('expresses a preference for ___ heuristic') -->
-  + Labeling model: rate of agreement (accuracy) with voters (if we assume voters are actually experts, then this is the accuracy of our method; otherwise, examine the differences)
+  <!-- + Labeling model: rate of agreement (accuracy) with voters (if we assume voters are actually experts, then this is the accuracy of our method; otherwise, examine the differences) -->
     <!-- * Rate of agreement per labeling function -->
     <!-- * (MM) Rate of agreement per labeling function, per scenario type -->
     <!-- * Total rate of agreement -->
     <!-- * The final estimated weight vector -->
-    * (MM) Qualitative assessment of disagreement by scenario type
-    * Labeling model perturbations - how does dropping each LF affect accuracy?
-    * Qualitative assessment of disagreement by labeling function
+    <!-- * (MM) Disagreement by scenario type -->
+    <!-- * Labeling model perturbations - how does dropping each LF affect accuracy? -->
+    * Qualitative assessment of disagreement by labeling function - try developing an explanatory ML technique for tracing labeling errors (or even modeling errors) back to the heuristics
     <!-- * Trade off between label model, majority voter -->
-    * (KE) Bonus experiment: try weighting by heuristic frequency
+    * (KE) Bonus experiment: try weighting by heuristic frequency in user responses
   + Discriminative model: rate of agreement
-    * Accuracy as data size increases (compare both gold label model and heuristic model - if data is low, does heuristic over-perform?)
-    * By number of voters
-    * By number of votes from each voter
-    * (MM) Random scenarios vs. special scenarios
-    * Accuracy with the addition of invented data (Cite Snorkel paper section 4.1.4)
-    * Compare to reported statistics for baseline models (Kim, Noothigattu, Freedman)
+    <!-- ~ Accuracy as data size increases (compare both gold label model and heuristic model - if data is low, does heuristic over-perform?) -->
+    <!-- ~ (MM) Match Kim experimental conditions - try to train on first 8 respondents for 128 different voters, then test on last 5 responses -->
+    ~ (KE) Match Kim experimental conditions - try to train on first 8 respondents for 128 different voters, then test on last 5 responses
+    <!-- * By number of voters -->
+    * (Bonus) Accuracy with probabilistic labels instead of threshold (keras cross-entropy loss)
+    * (Bonus) (MM) Random scenarios vs. special scenarios
+    * (Bonus) Accuracy with the addition of invented data (Cite Snorkel paper section 4.1.4)
+    * (Bonus) (MM) Compare to reported statistics for baseline models (Kim, Noothigattu, Freedman)
 
 ## Discussion
 - Discuss benefits
@@ -170,3 +171,12 @@ Results to present
 
 ## Conclusion
 Restate Heilmeier's catechism - call for heuristic approaches
+
+TODO experiments:
+- code each KE response into a heuristic, then weight the heuristics by those codings
+- implement bradley terry with choix package to estimate weights for each training set
+- explanatory techniques to explain common label model errors
+- (Bonus) Accuracy with probabilistic labels instead of threshold (keras cross-entropy loss)
+- (Bonus) (MM) Random scenarios vs. special scenarios
+- (Bonus) Accuracy with the addition of invented data (Cite Snorkel paper section 4.1.4)
+- (Bonus) (MM) Compare to reported statistics for baseline models (Kim, Noothigattu, Freedman)
