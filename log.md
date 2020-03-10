@@ -720,14 +720,16 @@ Per Yu et al. lit review:
 ## 25 Feb 20
 Writing the paper!! See `outline.md`
 
+## 9 Mar 20
+<!-- - **Replicate for the kidney exchange problem**
+  + Repeat Freedman's kidney simulation, but with randomly generated patient profiles instead - basically can just copy methods from her paper, Dickerson's code -->
+<!--   ~ Write the draft using `outline.md` -->
 
 ## TODO
 - **Write up Snorkel in a research paper - see [paper outline](#paper-outline)**
-  ~ Write the draft using `outline.md`
   + What's missing in this draft?
+  + What terms aren't adequately defined? Define them
   + What use cases could complement best?
-<!-- - **Replicate for the kidney exchange problem**
-  + Repeat Freedman's kidney simulation, but with randomly generated patient profiles instead - basically can just copy methods from her paper, Dickerson's code -->
 - **Replicate some other models for an MM baseline (to better compare performance - only way to know if actually comparable)**
   + Kim et al.
     * Try to reproduce Figure 8 (out of sample individual voter predictions) - for each of their benchmark models - note that they sample a very low number of respondents, this may affect results

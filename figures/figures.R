@@ -6,11 +6,17 @@ library(tidyr)
 library(repurrrsive)
 
 primary_bold = "#1f78b4"
+primary_bold_ke = "#1b9e77"
 primary_light = "#C1DAEA"
+primary_light_ke = "#ACDBCD"
 secondary = "#6a3d9a"
+secondary_ke = "#d95f02"
 secondary_light  = "#BBA6D1"
+secondary_light_ke = "#f1c4a3"
 tertiary = "#F991CC"
+tertiary_ke = "#7570b3"
 tertiary_light = "#FCD7EC"
+tertiary_light_ke = "#CCCBE3"
 muted = "grey60"
 muted_light = "grey75"
 
@@ -44,7 +50,8 @@ ggplot(freq_character, aes(x=reorder(X, frequency), y=frequency)) +
     axis.text.y = element_text(face="bold"),
     axis.title.x = element_text(face="bold"),
     axis.title.y = element_blank()
-  )
+  ) +
+  ggtitle("Moral Machine Character Frequency")
 ggsave('figures/freq_character.png', width=4, height=6)
 
 n=30
@@ -65,7 +72,8 @@ ggplot(df, aes(x=X, y=UserCountry3)) +
     axis.text.y = element_text(face="bold", size=12),
     axis.title.x = element_text(face="bold", size=12),
     axis.title.y = element_blank()
-  )
+  ) +
+  ggtitle("Moral Machine Respondents by Country")
 ggsave('figures/freq_countries.png', width=4, height=6)
 
 mm_perturb = read.csv("figures/data/mm-perturb.csv")
@@ -83,7 +91,8 @@ ggplot(mm_perturb, aes(x=reorder(formatted, value_added), y=value_added)) +
     axis.text.y = element_text(face="bold", size=12),
     axis.title.x = element_text(face="bold", size=12),
     axis.title.y = element_blank()
-  )
+  ) +
+  ggtitle("Accuracy Gain per Heuristic")
 ggsave("figures/mm-perturb.png", width=5, height=5)
 
 
@@ -118,7 +127,8 @@ ggplot(accs, aes(x=lf_formatted, y=acc)) +
   theme(
     axis.text.y = element_text(size=8, face=c(rep("plain", 17), "bold")),
     axis.title.x = element_text(size=8)
-  )
+  ) +
+  ggtitle("Heuristic Accuracy")
 ggsave('figures/mm-preds_scenario.png', width=7, height=9)
 
 
@@ -160,28 +170,31 @@ ggplot(data = accs, mapping=aes(x=n_voters)) +
   geom_point(aes(y=acc_heuristic), color=secondary_light) +
   geom_ribbon(aes(ymin=acc_gold-1.96*std_gold, ymax=acc_gold+1.96*std_gold), fill=muted, alpha=alpha) +
   geom_ribbon(aes(ymin=acc_heuristic-1.96*std_heuristic, ymax=acc_heuristic+1.96*std_heuristic), fill=muted, alpha=alpha) +
-  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~x), se=T) +
-  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~x), se=T) +
+  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~sqrt(x)), se=T) +
+  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~sqrt(x)), se=T) +
   scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels")) +
   scale_y_continuous(breaks=round(seq(0.4, 0.8, by=0.05), 2), limits=c(0.4, 0.8)) +
   theme(legend.position=c(.75, .25)) +
   labs(y="Accuracy", x="Number of Respondents") +
-  ggtitle("Discriminative Accuracy vs. Number of Respondents")
+  ggtitle("Discriminative Accuracy vs. Number of Respondents (Moral Machine)")
 ggsave("figures/mm-accs_voter.png", width=6, height=6)
 
 accs_ke = read.csv("figures/data/ke-accs_voters.csv")
 ggplot(data = accs_ke, mapping=aes(x=n_voters)) +
-  geom_point(aes(y=acc_gold), color=primary_light) +
-  geom_point(aes(y=acc_heuristic), color=secondary_light) +
+  geom_point(aes(y=acc_gold), color=primary_light_ke) +
+  geom_point(aes(y=acc_heuristic), color=secondary_light_ke) +
+  geom_point(aes(y=acc_borda), color=tertiary_light_ke) +
   geom_ribbon(aes(ymin=acc_gold-1.96*std_gold, ymax=acc_gold+1.96*std_gold), fill=muted, alpha=alpha) +
   geom_ribbon(aes(ymin=acc_heuristic-1.96*std_heuristic, ymax=acc_heuristic+1.96*std_heuristic), fill=muted, alpha=alpha) +
-  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~x), se=T) +
-  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~x), se=T) +
-  scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels")) +
+  geom_ribbon(aes(ymin=acc_borda-1.96*std_borda, ymax=acc_borda+1.96*std_borda), fill=muted, alpha=alpha) +
+  geom_smooth(aes(y=acc_gold, color=primary_bold_ke), formula=(y~sqrt(x)), se=T) +
+  geom_smooth(aes(y=acc_heuristic,  color=secondary_ke), formula=(y~sqrt(x)), se=T) +
+  geom_smooth(aes(y=acc_borda,  color=tertiary_ke), formula=(y~sqrt(x)), se=T) +
+  scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels - Borda Weighting", "Heuristic Labels - Generative")) +
   scale_y_continuous(breaks=round(seq(0.6, 1.0, by=0.05), 2), limits=c(0.6, 1.0)) +
   theme(legend.position=c(.75, .25)) +
   labs(y="Accuracy", x="Number of Respondents") +
-  ggtitle("Discriminative Accuracy vs. Number of Respondents")
+  ggtitle("Discriminative Accuracy vs. Number of Respondents (Kidney Exchange)")
 ggsave("figures/ke-accs_voter.png", width=6, height=6)
 
 accs_n = read.csv("figures/data/mm-accs_data.csv")
@@ -197,25 +210,25 @@ ggplot(data = accs_n, mapping=aes(x=n_rows)) +
   scale_y_continuous(breaks=round(seq(0.4, 0.9, by=0.05), 2), limits=c(0.4, 0.9)) +
   theme(legend.position=c(.75, .25)) +
   labs(y="Accuracy", x="Training Set Size") +
-  ggtitle("Discriminative Accuracy vs. Size of Training Set")
+  ggtitle("Discriminative Accuracy vs. Size of Training Set (Moral Machine)")
 ggsave("figures/mm-accs_data.png", width=6, height=6)
 
 accs_n_ke = read.csv("figures/data/ke-accs_data.csv")
 ggplot(data = accs_n_ke, mapping=aes(x=n_rows)) +
-  geom_point(aes(y=acc_gold), color=primary_light) +
-  geom_point(aes(y=acc_heuristic), color=secondary_light) +
-  geom_point(aes(y=acc_freedman), color=tertiary_light) +
+  geom_point(aes(y=acc_gold), color=primary_light_ke) +
+  geom_point(aes(y=acc_heuristic), color=secondary_light_ke) +
+  geom_point(aes(y=acc_freedman), color=tertiary_light_ke) +
   geom_ribbon(aes(ymin=acc_gold-1.96*std_gold, ymax=acc_gold+1.96*std_gold), fill=muted, alpha=alpha) +
   geom_ribbon(aes(ymin=acc_heuristic-1.96*std_heuristic, ymax=acc_heuristic+1.96*std_heuristic), fill=muted, alpha=alpha) +
   geom_ribbon(aes(ymin=acc_freedman-1.96*std_freedman, ymax=acc_freedman+1.96*std_freedman), fill=muted, alpha=alpha) +
-  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~x), se=F) +
-  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~x), se=F) +
-  geom_smooth(aes(y=acc_freedman,  color=tertiary), formula=(y~x), se=F) +
-  scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels", "Freedman et al.")) +
+  geom_smooth(aes(y=acc_gold, color=primary_bold_ke), formula=(y~sqrt(x)), se=F) +
+  geom_smooth(aes(y=acc_heuristic,  color=secondary_ke), formula=(y~sqrt(x)), se=F) +
+  geom_smooth(aes(y=acc_freedman,  color=tertiary_ke), formula=(y~sqrt(x)), se=F) +
+  scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Freedman et al.", "Heuristic Labels")) +
   scale_y_continuous(breaks=round(seq(0.5, 1.0, by=0.05), 2), limits=c(0.5, 1.0)) +
   theme(legend.position=c(.75, .25)) +
   labs(y="Accuracy", x="Training Set Size") +
-  ggtitle("Discriminative Accuracy vs. Size of Training Set")
+  ggtitle("Discriminative Accuracy vs. Size of Training Set (Kidney Exchange)")
 ggsave("figures/ke-accs_data.png", width=6, height=6)
 
 F####################################################################
@@ -226,15 +239,17 @@ find_density = function(x) {
 }
 L$density = apply(L, 1, find_density)
 ggplot(L, aes(x=density)) +
-  geom_density(color=primary_bold, fill=primary_light, adjust=1.5) +
-  labs(y="Smoothed Density", x="Non-Abstaining Heuristic Functions")
+  geom_histogram(binwidth=1, color=primary_bold, fill=primary_light) +
+  labs(y="Density", x="Non-Abstaining Heuristic Functions") +
+  ggtitle("Labeling Density (Moral Machine)")
 ggsave('figures/mm-density.png', width=4, height=4)
 
 ke = read.csv("figures/data/ke-density.csv")
 ke$density = apply(ke, 1, find_density)
 ggplot(ke, aes(x=density)) +
-  geom_histogram(binwidth=1, color=primary_bold, fill=primary_light) +
-  labs(y="Density", x="Non-Abstaining Heuristic Functions")
+  geom_histogram(binwidth=1, color=primary_bold_ke, fill=primary_light_ke) +
+  labs(y="Density", x="Non-Abstaining Heuristic Functions") +
+  ggtitle("Labeling Density (Kidney Exchange)")
 ggsave('figures/ke-density.png', width=3, height=4)
 
 

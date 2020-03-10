@@ -130,11 +130,11 @@ Results to present
     <!-- * Labeling model perturbations - how does dropping each LF affect accuracy? -->
     * Qualitative assessment of disagreement by labeling function - try developing an explanatory ML technique for tracing labeling errors (or even modeling errors) back to the heuristics
     <!-- * Trade off between label model, majority voter -->
-    * (KE) Bonus experiment: try weighting by heuristic frequency in user responses
+    <!-- * (KE) Bonus experiment: try weighting by heuristic frequency in user responses -->
   + Discriminative model: rate of agreement
     <!-- ~ Accuracy as data size increases (compare both gold label model and heuristic model - if data is low, does heuristic over-perform?) -->
     <!-- ~ (MM) Match Kim experimental conditions - try to train on first 8 respondents for 128 different voters, then test on last 5 responses -->
-    ~ (KE) Match Kim experimental conditions - try to train on first 8 respondents for 128 different voters, then test on last 5 responses
+    <!-- ~ (KE) Match Kim experimental conditions - try to train on first 8 respondents for 128 different voters, then test on last 5 responses -->
     <!-- * By number of voters -->
     * (Bonus) Accuracy with probabilistic labels instead of threshold (keras cross-entropy loss)
     * (Bonus) (MM) Random scenarios vs. special scenarios
@@ -163,6 +163,7 @@ Results to present
   + The requirements for being an SME labeler exclude certain groups from being able to provide input: The profile of the best performing user by F1 score was a MS or Ph.D. degree in any field, strong Python coding skills, and intermediate to advanced experience with machine learning (Snorkel). How to make this accessible to lower-educated, non Python coders?
 - Mirror weak supervision trade-offs section of Snorkel paper
 - Future work
+  + Actually collect from experts (both ground-truth and heuristics, compare) and test in a real-world scenario
   + Suggest intelligent active learning approach during labeling process (an interface that shows datapoints not covered, or datapoints with high conflict)
   + Human-in-the-loop system, at least for training
   + MOST IMPORTANT: INCLUDE ETHICAL AND "TECHNICAL" HEURISTICS IN SAME LABEL MODEL
