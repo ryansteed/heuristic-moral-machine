@@ -22,6 +22,7 @@ muted_light = "grey75"
 
 format_lf_name = function(d) {
   x = gsub("_", " ", d)
+  print(x)
   if (x == "utilitarian anthro") return("utilitarian (human)")
   if (x %in% c("youth", "doctors", "females", "elderly")) return(paste("save", x))
   if (x %in% c("pets", "homeless", "criminals")) return(paste("sacrifice", x))
@@ -30,6 +31,10 @@ format_lf_name = function(d) {
   if (x=="legal") return("favor legal crossing")
   if (x=="illegal") return("disfavor illegal crossing")
   if (x=="pred") return("Generative Model")
+  if (x=="pred weighted majority") return("Weighted Majority Voter")
+  if (x=="health") return("Choose no health issues")
+  if (x=="age") return("Choose younger")
+  if (x=="alcohol") return("Choose drinks less")
   return(x)
 }
 
@@ -132,6 +137,42 @@ ggplot(accs, aes(x=lf_formatted, y=acc)) +
 ggsave('figures/mm-preds_scenario.png', width=7, height=9)
 
 
+preds_scenario_ke = read.csv("figures/data/ke-preds_scenario.csv")
+# need to calculate accuracy per scenario
+to_calc = setdiff(colnames(preds_scenario_ke), c("scenario", "actual", "X"))
+acc_t = preds_scenario_ke %>%
+  group_by(scenario) %>%
+  summarise_at(vars(!!to_calc), funs(
+    sum(. == actual) / (n() - sum(. == -1))
+  ))
+## TODO add error bars with a proportion confidence interval https://stackoverflow.com/questions/17810684/in-ggplot2-how-can-i-make-a-bar-chart-of-proportions-across-factors-and-add-er
+acc <- data.frame(t(acc_t[-1]))
+colnames(acc) <- acc_t$scenario
+acc$lf <- row.names(acc)
+accs = acc %>% gather(scenario, acc, Age:Random) %>% drop_na()
+accs$lf = factor(accs$lf, levels=c(c("preds", "preds_weighted_majority"), setdiff(colnames(preds_scenario_ke), c("preds", "preds_weighted_majority"))))
+accs$lf_formatted = mapply(format_lf_name, accs$lf)
+accs$lf_formatted = factor(accs$lf_formatted, levels=c(setdiff(unique(accs$lf_formatted), c("Generative Model", "Weighted Majority Voter")), c("Weighted Majority Voter", "Generative Model")))
+accs$fill = rep(primary_light_ke, nrow(accs))
+accs$fill[accs$lf_formatted == "Generative Model"] = secondary_light_ke
+accs$fill[accs$lf_formatted == "Weighted Majority Voter"] = tertiary_light_ke
+accs$color = rep(primary_bold_ke, nrow(accs))
+accs$color[accs$lf_formatted == "Generative Model"] = secondary_ke
+accs$color[accs$lf_formatted == "Weighted Majority Voter"] = tertiary_ke
+ggplot(accs, aes(x=lf_formatted, y=acc)) +
+  geom_bar(stat="identity",position="dodge") +
+  facet_wrap(~ scenario, ncol=2) +
+  geom_col(fill=accs$fill, color=accs$color) +
+  coord_flip() +
+  labs(x="Accuracy", "Heuristic") +
+  theme(
+    axis.text.y = element_text(size=8, face=c(rep("plain", 17), "bold")),
+    axis.title.x = element_text(size=8)
+  ) +
+  ggtitle("Heuristic Accuracy")
+ggsave('figures/ke-preds_scenario.png', width=6, height=5)
+
+
 ####################################################################
 ## Scatters ##
 lfanalysis_weighted = read.csv("figures/data/mm-weights.csv")
@@ -174,7 +215,7 @@ ggplot(data = accs, mapping=aes(x=n_voters)) +
   geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~sqrt(x)), se=T) +
   scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels")) +
   scale_y_continuous(breaks=round(seq(0.4, 0.8, by=0.05), 2), limits=c(0.4, 0.8)) +
-  theme(legend.position=c(.75, .25)) +
+  theme(legend.position=c(.75, .25), plot.title=element_text(size=12)) +
   labs(y="Accuracy", x="Number of Respondents") +
   ggtitle("Discriminative Accuracy vs. Number of Respondents (Moral Machine)")
 ggsave("figures/mm-accs_voter.png", width=6, height=6)
@@ -250,6 +291,6 @@ ggplot(ke, aes(x=density)) +
   geom_histogram(binwidth=1, color=primary_bold_ke, fill=primary_light_ke) +
   labs(y="Density", x="Non-Abstaining Heuristic Functions") +
   ggtitle("Labeling Density (Kidney Exchange)")
-ggsave('figures/ke-density.png', width=3, height=4)
+ggsave('figures/ke-density.png', width=4, height=4)
 
 

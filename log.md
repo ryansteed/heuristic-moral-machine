@@ -725,6 +725,30 @@ Writing the paper!! See `outline.md`
   + Repeat Freedman's kidney simulation, but with randomly generated patient profiles instead - basically can just copy methods from her paper, Dickerson's code -->
 <!--   ~ Write the draft using `outline.md` -->
 
+## 13 Mar 20
+Williams comments (general points):
+- Notation heavy... but also long
+  + Have a running example
+  + Maybe use Moral Machine as a running example
+- Put stuff in appendices?
+- Good to have in mind guiding principle: who your audience is (this paper should look different if it were something to be submitted to a journal)
+- At some point, do a read through and look for things to cut - make life easier for people reading
+- On topic: add stuff about use cases in economics, computational economics; good idea to go around to committee members; most recommend changing is adding stuff to the introduction
+- Defense:
+  + Put together 10-15 slides
+  + Make sure to practice! Maybe do a practice presentation the week before; share the slides
+  + Bug Williams by SUnday morning
+
+### Williams Meet
+TODO experiments:
+- code each KE response into a heuristic, then weight the heuristics by those codings
+- implement bradley terry with choix package to estimate weights for each training set
+- explanatory techniques to explain common label model errors
+- (Bonus) Accuracy with probabilistic labels instead of threshold (keras cross-entropy loss)
+- (Bonus) (MM) Random scenarios vs. special scenarios
+- (Bonus) Accuracy with the addition of invented data (Cite Snorkel paper section 4.1.4)
+- (Bonus) (MM) Compare to reported statistics for baseline models (Kim, Noothigattu, Freedman)
+
 ## TODO
 - **Write up Snorkel in a research paper - see [paper outline](#paper-outline)**
   + What's missing in this draft?

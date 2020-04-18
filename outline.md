@@ -172,12 +172,3 @@ Results to present
 
 ## Conclusion
 Restate Heilmeier's catechism - call for heuristic approaches
-
-TODO experiments:
-- code each KE response into a heuristic, then weight the heuristics by those codings
-- implement bradley terry with choix package to estimate weights for each training set
-- explanatory techniques to explain common label model errors
-- (Bonus) Accuracy with probabilistic labels instead of threshold (keras cross-entropy loss)
-- (Bonus) (MM) Random scenarios vs. special scenarios
-- (Bonus) Accuracy with the addition of invented data (Cite Snorkel paper section 4.1.4)
-- (Bonus) (MM) Compare to reported statistics for baseline models (Kim, Noothigattu, Freedman)
