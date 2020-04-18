@@ -1,5 +1,5 @@
 data/*
-jupyter/.ipynb_checkpoints
+examples/.ipynb_checkpoints
 .Rproj.user
 hmm/__pycache__
 hmm/labeling/__pycache__
@@ -14,3 +14,4 @@ figures/*.png
 hmm.Rproj
 .idea
 figures/data
+docs/build/*
