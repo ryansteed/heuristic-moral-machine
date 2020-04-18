@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>hmm.labeling.utils module &mdash; heuristic-moral-machine 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="hmm.classification module" href="hmm.classification.html" />
+    <link rel="prev" title="hmm.labeling.tests module" href="hmm.labeling.tests.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> heuristic-moral-machine
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Heuristic Moral Machine Project</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">hmm</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="hmm.html">hmm package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="hmm.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="hmm.labeling.html">hmm.labeling namespace</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hmm.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hmm.html#module-hmm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">heuristic-moral-machine</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">hmm</a> &raquo;</li>
+        
+          <li><a href="hmm.html">hmm package</a> &raquo;</li>
+        
+          <li><a href="hmm.labeling.html">hmm.labeling namespace</a> &raquo;</li>
+        
+      <li>hmm.labeling.utils module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/hmm.labeling.utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-hmm.labeling.utils">
+<span id="hmm-labeling-utils-module"></span><h1>hmm.labeling.utils module<a class="headerlink" href="#module-hmm.labeling.utils" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="hmm.labeling.utils.choose_barrier">
+<code class="sig-prename descclassname">hmm.labeling.utils.</code><code class="sig-name descname">choose_barrier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">reverse</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/utils.html#choose_barrier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.utils.choose_barrier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose the scenario where the AV hits the barrier.
+If there is no such scenario, abstain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reverse</strong> – If false, choose to hit the barrier. Else choose not to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hmm.labeling.utils.choose_max">
+<code class="sig-prename descclassname">hmm.labeling.utils.</code><code class="sig-name descname">choose_max</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/utils.html#choose_max"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.utils.choose_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accept a single argmax only; if there is a tie, abstain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – an nparray of the values; must be in the order <cite>noint</cite>, <cite>int</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hmm.labeling.utils.count_characters">
+<code class="sig-prename descclassname">hmm.labeling.utils.</code><code class="sig-name descname">count_characters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">suffix</span></em>, <em class="sig-param"><span class="n">characters</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/utils.html#count_characters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.utils.count_characters" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>suffix</strong> – The suffix to use - int or noint</p></li>
+<li><p><strong>characters</strong> – a list of characters to sum up</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the number of characters in these groups</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hmm.labeling.utils.is_law_abiding">
+<code class="sig-prename descclassname">hmm.labeling.utils.</code><code class="sig-name descname">is_law_abiding</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">suf</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/utils.html#is_law_abiding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.utils.is_law_abiding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hmm.labeling.utils.is_law_violating">
+<code class="sig-prename descclassname">hmm.labeling.utils.</code><code class="sig-name descname">is_law_violating</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">suf</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/utils.html#is_law_violating"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.utils.is_law_violating" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hmm.labeling.utils.is_passenger">
+<code class="sig-prename descclassname">hmm.labeling.utils.</code><code class="sig-name descname">is_passenger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">suf</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/utils.html#is_passenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.utils.is_passenger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hmm.labeling.utils.pictofy">
+<code class="sig-prename descclassname">hmm.labeling.utils.</code><code class="sig-name descname">pictofy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">raw</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/utils.html#pictofy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.utils.pictofy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="hmm.labeling.utils.select_against_homogenous_group">
+<code class="sig-prename descclassname">hmm.labeling.utils.</code><code class="sig-name descname">select_against_homogenous_group</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">group</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/utils.html#select_against_homogenous_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.utils.select_against_homogenous_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Always select against a group if it contains only instances of characters in :group:.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hmm.labeling.utils.spare_group">
+<code class="sig-prename descclassname">hmm.labeling.utils.</code><code class="sig-name descname">spare_group</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">group</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/utils.html#spare_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.utils.spare_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Never choose an alternative that sacrifices a character in :group:.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hmm.labeling.utils.transform_abstract">
+<code class="sig-prename descclassname">hmm.labeling.utils.</code><code class="sig-name descname">transform_abstract</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/utils.html#transform_abstract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.utils.transform_abstract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="hmm.classification.html" class="btn btn-neutral float-right" title="hmm.classification module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hmm.labeling.tests.html" class="btn btn-neutral float-left" title="hmm.labeling.tests module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Ryan Steed
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
