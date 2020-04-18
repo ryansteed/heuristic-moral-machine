@@ -5,3 +5,12 @@ hmm/__pycache__
 hmm/labeling/__pycache__
 hmm/.ipynb_checkpoints
 hmm/labeling/.ipynb_checkpoints
+figures/.DS_Store
+figures/.Rhistory
+figures/*.png
+.DS_Store
+.RData
+.Rhistory
+hmm.Rproj
+.idea
+figures/data
