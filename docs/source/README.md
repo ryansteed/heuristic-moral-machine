@@ -3,9 +3,13 @@ Heuristic Moral Machine Project
 
 **Heuristic-Based Weak Learning for Moral Decision-Making**
 
+Attempting to train moral algorithms with ethical/legal heuristic functions to build more ethical systems.
+
 Author: Ryan Steed
 
-Attempting to train moral algorithms with ethical/legal heuristic functions to build more ethical systems.
+View the data & code on [Github](https://github.com/ryansteed/heuristic-moral-machine).
+
+## Description
 
 This repo contains a software package for training and evaluating a moral decision-making algorithm for two use cases: 
 the autonomous vehicle trolley problem and the kidney exchange.
