@@ -164,7 +164,7 @@ ggplot(accs, aes(x=lf_formatted, y=acc)) +
   facet_wrap(~ scenario, ncol=2) +
   geom_col(fill=accs$fill, color=accs$color) +
   coord_flip() +
-  labs(x="Accuracy", "Heuristic") +
+  labs(x="Accuracy", y="Heuristic") +
   theme(
     axis.text.y = element_text(size=8, face=c(rep("plain", 17), "bold")),
     axis.title.x = element_text(size=8)
@@ -233,7 +233,7 @@ ggplot(data = accs_ke, mapping=aes(x=n_voters)) +
   geom_smooth(aes(y=acc_borda,  color=tertiary_ke), formula=(y~sqrt(x)), se=T) +
   scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels - Borda Weighting", "Heuristic Labels - Generative")) +
   scale_y_continuous(breaks=round(seq(0.6, 1.0, by=0.05), 2), limits=c(0.6, 1.0)) +
-  theme(legend.position=c(.75, .25)) +
+  theme(legend.position=c(.75, .25), plot.title=element_text(size=12)) +
   labs(y="Accuracy", x="Number of Respondents") +
   ggtitle("Discriminative Accuracy vs. Number of Respondents (Kidney Exchange)")
 ggsave("figures/ke-accs_voter.png", width=6, height=6)
