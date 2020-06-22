@@ -103,6 +103,8 @@ ggsave("figures/mm-perturb.png", width=5, height=5)
 
 ####################################################################
 ## Faceted Bar ##
+
+## Acurracy by Scenario
 preds_scenario = read.csv("figures/data/mm-preds_scenario.csv")
 # need to calculate accuracy per scenario
 to_calc = setdiff(colnames(preds_scenario), c("scenario", "actual", "X"))
@@ -111,7 +113,6 @@ acc_t = preds_scenario %>%
   summarise_at(vars(!!to_calc), funs(
     sum(. == actual) / (n() - sum(. == -1))
   ))
-## TODO add error bars with a proportion confidence interval https://stackoverflow.com/questions/17810684/in-ggplot2-how-can-i-make-a-bar-chart-of-proportions-across-factors-and-add-er
 acc <- data.frame(t(acc_t[-1]))
 colnames(acc) <- acc_t$scenario
 acc$lf <- row.names(acc)
@@ -136,6 +137,7 @@ ggplot(accs, aes(x=lf_formatted, y=acc)) +
   ggtitle("Heuristic Accuracy")
 ggsave('figures/mm-preds_scenario.png', width=7, height=9)
 
+## Accuracy by Heuristic
 accs_avg = accs %>% group_by(lf_formatted) %>% summarize(acc=mean(acc), color=first(color), fill=first(fill))
 levels(accs_avg$lf_formatted)[levels(accs_avg$lf_formatted) == "Generative Model"] = "Majority Vote"
 # https://stackoverflow.com/questions/39694490/highlighting-individual-axis-labels-in-bold-using-ggplot2
@@ -165,7 +167,7 @@ ggplot(accs_avg, aes(x=lf_formatted, y=acc)) +
   ggtitle("Heuristic Accuracy")
 ggsave('figures/mm-preds_scenario_collapsed.png', width=7, height=9)
 
-
+## Accuracy by Scenario - Kidney Exchange
 preds_scenario_ke = read.csv("figures/data/ke-preds_scenario.csv")
 # need to calculate accuracy per scenario
 to_calc = setdiff(colnames(preds_scenario_ke), c("scenario", "actual", "X"))
@@ -174,7 +176,6 @@ acc_t = preds_scenario_ke %>%
   summarise_at(vars(!!to_calc), funs(
     sum(. == actual) / (n() - sum(. == -1))
   ))
-## TODO add error bars with a proportion confidence interval https://stackoverflow.com/questions/17810684/in-ggplot2-how-can-i-make-a-bar-chart-of-proportions-across-factors-and-add-er
 acc <- data.frame(t(acc_t[-1]))
 colnames(acc) <- acc_t$scenario
 acc$lf <- row.names(acc)
@@ -204,6 +205,8 @@ ggsave('figures/ke-preds_scenario.png', width=6, height=5)
 
 ####################################################################
 ## Scatters ##
+
+## Moral Machine - By Heuristic, Accuracy vs. Coverage vs. Weight
 lfanalysis_weighted = read.csv("figures/data/mm-weights.csv")
 lfanalysis_weighted$X = factor(lfanalysis_weighted$X, levels=unique(lfanalysis_weighted$X))
 lfanalysis_weighted$X_formatted = mapply(format_lf_name, lfanalysis_weighted$X)
@@ -217,6 +220,7 @@ ggplot(lfanalysis_weighted, aes(x=Coverage, y=Emp..Acc., size=Weight)) +
   geom_label_repel(aes(label=X_formatted), size=3, box.padding=0.75, point.padding=0.5)
 ggsave('figures/mm-weights.png', width=7.5, height=7.5)
 
+## Moral Machine - By Heuristic, Accuracy vs. Coverage vs. Effect Size
 lfanalysis_weighted = read.csv("figures/data/mm-weights_borda.csv")
 lfanalysis_weighted$X = factor(lfanalysis_weighted$X, levels=unique(lfanalysis_weighted$X))
 lfanalysis_weighted$X_formatted = mapply(format_lf_name, lfanalysis_weighted$X)
@@ -225,28 +229,14 @@ ggplot(lfanalysis_weighted, aes(x=Coverage, y=Emp..Acc., size=Weight)) +
   geom_point(fill=primary_light, colour=primary_bold, shape=21, stroke=1) +
   scale_size_continuous("Effect Size", range = c(3,12)) +
   labs(y="Accuracy", x="Coverage") +
-  ggtitle("Heuristic Accuracy vs. Coverage") +
   theme(legend.position=c(.90, .70)) +
   geom_label_repel(aes(label=X_formatted), size=3, box.padding=0.75, point.padding=0.5)
 ggsave('figures/mm-weights_borda.png', width=5.5, height=5.5)
 
-## not very good - deprecated
-#
-# lf_analysis_weighted_ke = read.csv("figures/data/ke-weights.csv")
-# lf_analysis_weighted_ke$X = factor(lf_analysis_weighted_ke$X, levels=unique(lf_analysis_weighted_ke$X))
-# lf_analysis_weighted_ke$X_formatted = mapply(format_lf_name, lf_analysis_weighted_ke$X)
-# lf_analysis_weighted_ke$Weight = lf_analysis_weighted_ke$weight
-# ggplot(lf_analysis_weighted_ke, aes(x=Coverage, y=Emp..Acc., size=Weight)) +
-#   geom_point(fill=primary_light, colour=primary_bold, shape=21, stroke=1) +
-#   scale_size_continuous(range = c(1,15)) +
-#   labs(y="Accuracy", x="Coverage") +
-#   ggtitle("Heuristic Accuracy vs. Coverage") +
-#   theme(legend.position=c(.90, .70)) +
-#   geom_label_repel(aes(label=X_formatted), size=3, box.padding=0.75, point.padding=0.5)
-# ggsave('figures/ke-weights.png', width=5, height=5)
-
 ####################################################################
 ## Lines ##
+
+## Moral Machine - Accuracy vs. Num Voters
 accs = read.csv("figures/data/mm-accs_voters.csv")
 ggplot(data = accs, mapping=aes(x=n_voters)) +
   geom_point(aes(y=acc_gold), color=primary_light) +
@@ -262,7 +252,8 @@ ggplot(data = accs, mapping=aes(x=n_voters)) +
   ggtitle("Discriminative Accuracy vs. Number of Respondents (Moral Machine)")
 ggsave("figures/mm-accs_voter.png", width=6, height=6)
 
-## MAKE SURE TO SET SAMPLE SIZE FOR CONFIDENCE INTERVALS ##
+## Moral Machine - Accuracy vs. Num Voters, ICML version
+### MAKE SURE TO SET SAMPLE SIZE FOR CONFIDENCE INTERVALS
 sample_size = 50
 accs = read.csv("figures/data/mm-accs_voters_icml.csv")
 span = 0.3
@@ -276,10 +267,10 @@ ggplot(data = accs, mapping=aes(x=n_voters)) +
   scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels - Unweighted")) +
   scale_y_continuous(breaks=round(seq(0.4, 0.8, by=0.05), 2), limits=c(0.5, 0.75)) +
   theme(legend.position=c(.65, .2), plot.title=element_text(size=7), legend.text=element_text(size=8), legend.title=element_text(size=9)) +
-  labs(y="Accuracy", x="Number of Respondents") +
-  ggtitle("Discriminative Accuracy vs. Number of Respondents (Moral Machine)")
+  labs(y="Accuracy", x="Number of Respondents")
 ggsave("figures/mm-accs_voter_icml.png", width=4, height=4)
 
+## Kidney Exchange - Accuracy vs. Num Voters
 accs_ke = read.csv("figures/data/ke-accs_voters.csv")
 ggplot(data = accs_ke, mapping=aes(x=n_voters)) +
   geom_point(aes(y=acc_gold), color=primary_light_ke) +
@@ -298,7 +289,8 @@ ggplot(data = accs_ke, mapping=aes(x=n_voters)) +
   ggtitle("Discriminative Accuracy vs. Number of Respondents (Kidney Exchange)")
 ggsave("figures/ke-accs_voter.png", width=6, height=6)
 
-## MAKE SURE TO SET SAMPLE SIZE FOR CONFIDENCE INTERVALS ##
+## Kidney Exchange - Accuracy vs. Num Voters, ICML version
+### MAKE SURE TO SET SAMPLE SIZE FOR CONFIDENCE INTERVALS
 sample_size = 50
 span = 0.5
 accs_ke = read.csv("figures/data/ke-accs_voters_icml.csv")
@@ -315,10 +307,10 @@ ggplot(data = accs_ke, mapping=aes(x=n_voters)) +
   scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels - Weighted", "Heuristic Labels - Unweighted")) +
   scale_y_continuous(breaks=round(seq(0.6, 1.0, by=0.05), 2), limits=c(0.625, 0.875)) +
   theme(legend.position=c(.65, .2), plot.title=element_text(size=7), legend.text=element_text(size=8), legend.title=element_text(size=9)) +
-  labs(y="Accuracy", x="Number of Respondents") +
-  ggtitle("Discriminative Accuracy vs. Number of Respondents (Kidney Exchange)")
+  labs(y="Accuracy", x="Number of Respondents")
 ggsave("figures/ke-accs_voter_icml.png", width=4, height=4)
 
+## Moral Machine - Accuracy vs. Training Set Size
 accs_n = read.csv("figures/data/mm-accs_data.csv")
 alpha = .25
 ggplot(data = accs_n, mapping=aes(x=n_rows)) +
@@ -335,6 +327,7 @@ ggplot(data = accs_n, mapping=aes(x=n_rows)) +
   ggtitle("Discriminative Accuracy vs. Size of Training Set (Moral Machine)")
 ggsave("figures/mm-accs_data.png", width=6, height=6)
 
+## Kidney Exchange - Accuracy vs. Training Set Size
 accs_n_ke = read.csv("figures/data/ke-accs_data.csv")
 ggplot(data = accs_n_ke, mapping=aes(x=n_rows)) +
   geom_point(aes(y=acc_gold), color=primary_light_ke) +
