@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>hmm.labeling.tests &mdash; heuristic-moral-machine 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> heuristic-moral-machine
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Heuristic Moral Machine Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">hmm</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">heuristic-moral-machine</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>hmm.labeling.tests</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for hmm.labeling.tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">.moralmachine</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">transform_abstract</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">TODO</span>
+
+<span class="sd">write all the test cases by adding example dicts to the sample dataframe</span>
+<span class="sd">then go through and manually label with each function for each pairwise comparison</span>
+<span class="sd">for each unit test, check the actual output against the gold standard</span>
+
+<span class="sd">intervene =&gt; save characters with suffix int</span>
+<span class="sd">don&#39;t intervene =&gt; save characters with suffix noint</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># don&#39;t intervene</span>
+<span class="n">SAVE_NOINT</span> <span class="o">=</span> <span class="n">NOINT</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="c1"># intervene</span>
+<span class="n">SAVE_INT</span> <span class="o">=</span> <span class="n">INT</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1"># abstain</span>
+<span class="n">ABSTAIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase">[docs]</a><span class="k">class</span> <span class="nc">LabelingFunctionTestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Note: A response of 0 indicates that the user chooses not to interfere, thus saving </span>
+<span class="sd">	the characters with suffix _noint. A response of 1 indicates the user chooses to interfere, </span>
+<span class="sd">	thus saving the characters with suffix _int. A response of -1 indicates abstention.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LabelingFunctionTestCase.setUp"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.setUp">[docs]</a>	<span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_doctors"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_doctors">[docs]</a>	<span class="k">def</span> <span class="nf">test_doctors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">doctors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Medical_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Medical_noint&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">doctors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Medical_int&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+			<span class="s2">&quot;Medical_noint&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">doctors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">()))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_utilitarian"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_utilitarian">[docs]</a>	<span class="k">def</span> <span class="nf">test_utilitarian</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">utilitarian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">1</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">utilitarian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">1</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">utilitarian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_utilitarian_anthro"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_utilitarian_anthro">[docs]</a>	<span class="k">def</span> <span class="nf">test_utilitarian_anthro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">utilitarian_anthro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span><span class="s2">&quot;Non-human_int&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">utilitarian_anthro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span><span class="s2">&quot;Human_int&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">utilitarian_anthro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Human_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Human_noint&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_inaction"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_inaction">[docs]</a>	<span class="k">def</span> <span class="nf">test_inaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">inaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">()))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_pedestrians"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_pedestrians">[docs]</a>	<span class="k">def</span> <span class="nf">test_pedestrians</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">pedestrians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">1</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">pedestrians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">pedestrians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">pedestrians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">1</span>
+		<span class="p">})))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_females"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_females">[docs]</a>	<span class="k">def</span> <span class="nf">test_females</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">females</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Female_int&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">females</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Female_int&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+			<span class="s2">&quot;Female_noint&quot;</span><span class="p">:</span> <span class="mi">3</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">females</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">()))</span></div>
+ 
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_fitness"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_fitness">[docs]</a>	<span class="k">def</span> <span class="nf">test_fitness</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">fitness</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Fit_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Fat_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Fit_noint&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Fat_noint&quot;</span><span class="p">:</span> <span class="mi">1</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">fitness</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Fit_int&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+			<span class="s2">&quot;Fat_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Fit_noint&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Fat_noint&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">fitness</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Fat_int&quot;</span><span class="p">:</span> <span class="mi">1</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">fitness</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">()))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_status"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_status">[docs]</a>	<span class="k">def</span> <span class="nf">test_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Working_int&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+			<span class="s2">&quot;Working_noint&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Working_int&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Working_noint&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">()))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_legal"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_legal">[docs]</a>	<span class="k">def</span> <span class="nf">test_legal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">legal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Law Abiding_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Abiding_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">legal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Law Abiding_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Abiding_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">INT</span><span class="p">,</span> <span class="n">legal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Law Abiding_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Law Abiding_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NOINT</span><span class="p">,</span> <span class="n">legal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Law Abiding_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Abiding_noint&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">legal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Law Abiding_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Law Abiding_noint&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_illegal"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_illegal">[docs]</a>	<span class="k">def</span> <span class="nf">test_illegal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">illegal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Law Violating_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">illegal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Law Violating_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_noint&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">INT</span><span class="p">,</span> <span class="n">illegal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Law Violating_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_noint&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">1</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NOINT</span><span class="p">,</span> <span class="n">illegal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Law Violating_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Law Violating_noint&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Passenger_noint&quot;</span><span class="p">:</span> <span class="mi">1</span>
+		<span class="p">})))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_youth"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_youth">[docs]</a>	<span class="k">def</span> <span class="nf">test_youth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">youth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">()))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">youth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Young_int&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+			<span class="s2">&quot;Young_noint&quot;</span><span class="p">:</span> <span class="mi">1</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">youth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Young_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Young_noint&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_criminals"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_criminals">[docs]</a>	<span class="k">def</span> <span class="nf">test_criminals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="c1"># neither group is only composed of criminals</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">criminals</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Criminal_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;Criminal_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">4</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">criminals</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Criminal_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;Criminal_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">4</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">criminals</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Criminal_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;Criminal_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">4</span>
+		<span class="p">})))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_homeless"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_homeless">[docs]</a>	<span class="k">def</span> <span class="nf">test_homeless</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="c1"># neither group is only composed of homeless</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">homeless</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Homeless_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;Homeless_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">4</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">homeless</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Homeless_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;Homeless_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">4</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">homeless</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Homeless_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;Homeless_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">4</span>
+		<span class="p">})))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_pets"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_pets">[docs]</a>	<span class="k">def</span> <span class="nf">test_pets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="c1"># neither group is only composed of pets</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">pets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Non-human_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;Non-human_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">4</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">pets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Non-human_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;Non-human_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">4</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">pets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">({</span>
+			<span class="s2">&quot;Non-human_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;Non-human_noint&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_int&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s2">&quot;NumberOfCharacters_noint&quot;</span><span class="p">:</span> <span class="mi">4</span>
+		<span class="p">})))</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.test_spare_group"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.test_spare_group">[docs]</a>	<span class="k">def</span> <span class="nf">test_spare_group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="c1"># using strollers as an example</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">spare_strollers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_null</span><span class="p">()))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ABSTAIN</span><span class="p">,</span> <span class="n">spare_strollers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Infancy_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Infancy_noint&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_INT</span><span class="p">,</span> <span class="n">spare_strollers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Infancy_int&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s2">&quot;Infancy_noint&quot;</span><span class="p">:</span> <span class="mi">0</span>
+		<span class="p">})))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">SAVE_NOINT</span><span class="p">,</span> <span class="n">spare_strollers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_df_random</span><span class="p">({</span>
+			<span class="s2">&quot;Infancy_int&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;Infancy_noint&quot;</span><span class="p">:</span> <span class="mi">2</span>
+		<span class="p">})))</span></div>
+
+
+<span class="c1">#    labeling_functions.illegal,</span>
+<span class="c1">#    labeling_functions.youth,</span>
+<span class="c1">#    labeling_functions.criminals,</span>
+<span class="c1">#    labeling_functions.homeless,</span>
+<span class="c1">#    labeling_functions.pets,</span>
+<span class="c1">#    labeling_functions.spare_strollers,</span>
+<span class="c1">#    labeling_functions.spare_girl,</span>
+<span class="c1">#    labeling_functions.spare_boy,</span>
+<span class="c1">#    labeling_functions.spare_pregnant</span>
+
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.generate_df_null"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.generate_df_null">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">generate_df_null</span><span class="p">(</span><span class="n">subdict</span><span class="o">=</span><span class="p">{}):</span>
+		<span class="k">return</span> <span class="n">LabelingFunctionTestCase</span><span class="o">.</span><span class="n">df_from_dict</span><span class="p">({</span>
+			<span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">characters_abstract</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;noint&quot;</span><span class="p">]</span>
+		<span class="p">},</span> <span class="n">subdict</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.generate_df_random"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.generate_df_random">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">generate_df_random</span><span class="p">(</span><span class="n">subdict</span><span class="o">=</span><span class="p">{}):</span>
+		<span class="k">return</span> <span class="n">LabelingFunctionTestCase</span><span class="o">.</span><span class="n">df_from_dict</span><span class="p">({</span>
+			<span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">characters_abstract</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;noint&quot;</span><span class="p">]</span>
+		<span class="p">},</span> <span class="n">subdict</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LabelingFunctionTestCase.df_from_dict"><a class="viewcode-back" href="../../../hmm.labeling.tests.html#hmm.labeling.tests.LabelingFunctionTestCase.df_from_dict">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">df_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">subd</span><span class="p">):</span>
+		<span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">subd</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">d</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+	<span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Ryan Steed
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
