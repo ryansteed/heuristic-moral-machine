@@ -136,6 +136,35 @@ ggplot(accs, aes(x=lf_formatted, y=acc)) +
   ggtitle("Heuristic Accuracy")
 ggsave('figures/mm-preds_scenario.png', width=7, height=9)
 
+accs_avg = accs %>% group_by(lf_formatted) %>% summarize(acc=mean(acc), color=first(color), fill=first(fill))
+levels(accs_avg$lf_formatted)[levels(accs_avg$lf_formatted) == "Generative Model"] = "Majority Vote"
+# https://stackoverflow.com/questions/39694490/highlighting-individual-axis-labels-in-bold-using-ggplot2
+colorado <- function(src, boulder) {
+  if (!is.factor(src)) src <- factor(src)                   # make sure it's a factor
+  src_levels <- levels(src)                                 # retrieve the levels in their order
+  brave <- boulder %in% src_levels                          # make sure everything we want to make bold is actually in the factor levels
+  if (all(brave)) {                                         # if so
+    b_pos <- purrr::map_int(boulder, ~which(.==src_levels)) # then find out where they are
+    b_vec <- rep("plain", length(src_levels))               # make'm all plain first
+    b_vec[b_pos] <- "bold"                                  # make our targets bold
+    print(b_vec)
+    b_vec                                                   # return the new vector
+  } else {
+    stop("All elements of 'boulder' must be in src")
+  }
+}
+ggplot(accs_avg, aes(x=lf_formatted, y=acc)) +
+  geom_bar(stat="identity") +
+  geom_col(fill=accs_avg$fill, color=accs_avg$color) +
+  coord_flip() +
+  labs(x="Heuristic", y="Accuracy") +
+  theme(
+    axis.title.x = element_text(size=8),
+    axis.text.y = element_text(face=colorado(accs_avg$lf_formatted, c("Majority Vote")))
+  ) +
+  ggtitle("Heuristic Accuracy")
+ggsave('figures/mm-preds_scenario_collapsed.png', width=7, height=9)
+
 
 preds_scenario_ke = read.csv("figures/data/ke-preds_scenario.csv")
 # need to calculate accuracy per scenario
@@ -188,6 +217,19 @@ ggplot(lfanalysis_weighted, aes(x=Coverage, y=Emp..Acc., size=Weight)) +
   geom_label_repel(aes(label=X_formatted), size=3, box.padding=0.75, point.padding=0.5)
 ggsave('figures/mm-weights.png', width=7.5, height=7.5)
 
+lfanalysis_weighted = read.csv("figures/data/mm-weights_borda.csv")
+lfanalysis_weighted$X = factor(lfanalysis_weighted$X, levels=unique(lfanalysis_weighted$X))
+lfanalysis_weighted$X_formatted = mapply(format_lf_name, lfanalysis_weighted$X)
+lfanalysis_weighted$Weight = lfanalysis_weighted$weight
+ggplot(lfanalysis_weighted, aes(x=Coverage, y=Emp..Acc., size=Weight)) +
+  geom_point(fill=primary_light, colour=primary_bold, shape=21, stroke=1) +
+  scale_size_continuous("Effect Size", range = c(3,12)) +
+  labs(y="Accuracy", x="Coverage") +
+  ggtitle("Heuristic Accuracy vs. Coverage") +
+  theme(legend.position=c(.90, .70)) +
+  geom_label_repel(aes(label=X_formatted), size=3, box.padding=0.75, point.padding=0.5)
+ggsave('figures/mm-weights_borda.png', width=5.5, height=5.5)
+
 ## not very good - deprecated
 #
 # lf_analysis_weighted_ke = read.csv("figures/data/ke-weights.csv")
@@ -220,6 +262,24 @@ ggplot(data = accs, mapping=aes(x=n_voters)) +
   ggtitle("Discriminative Accuracy vs. Number of Respondents (Moral Machine)")
 ggsave("figures/mm-accs_voter.png", width=6, height=6)
 
+## MAKE SURE TO SET SAMPLE SIZE FOR CONFIDENCE INTERVALS ##
+sample_size = 50
+accs = read.csv("figures/data/mm-accs_voters_icml.csv")
+span = 0.3
+ggplot(data = accs, mapping=aes(x=n_voters)) +
+  geom_point(aes(y=acc_gold), color=primary_light) +
+  geom_point(aes(y=acc_heuristic), color=secondary_light) +
+  geom_ribbon(aes(ymin=acc_gold-1.96*std_gold/sqrt(sample_size), ymax=acc_gold+1.96*std_gold/sqrt(sample_size)), fill=muted, alpha=alpha) +
+  geom_ribbon(aes(ymin=acc_heuristic-1.96*std_heuristic/sqrt(sample_size), ymax=acc_heuristic+1.96*std_heuristic/sqrt(sample_size)), fill=muted, alpha=alpha) +
+  geom_smooth(aes(y=acc_gold, color=primary_bold), formula=(y~x), se=F, size=.5,span=span) +
+  geom_smooth(aes(y=acc_heuristic,  color=secondary), formula=(y~x), se=F, size=.5, span=span) +
+  scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels - Unweighted")) +
+  scale_y_continuous(breaks=round(seq(0.4, 0.8, by=0.05), 2), limits=c(0.5, 0.75)) +
+  theme(legend.position=c(.65, .2), plot.title=element_text(size=7), legend.text=element_text(size=8), legend.title=element_text(size=9)) +
+  labs(y="Accuracy", x="Number of Respondents") +
+  ggtitle("Discriminative Accuracy vs. Number of Respondents (Moral Machine)")
+ggsave("figures/mm-accs_voter_icml.png", width=4, height=4)
+
 accs_ke = read.csv("figures/data/ke-accs_voters.csv")
 ggplot(data = accs_ke, mapping=aes(x=n_voters)) +
   geom_point(aes(y=acc_gold), color=primary_light_ke) +
@@ -237,6 +297,27 @@ ggplot(data = accs_ke, mapping=aes(x=n_voters)) +
   labs(y="Accuracy", x="Number of Respondents") +
   ggtitle("Discriminative Accuracy vs. Number of Respondents (Kidney Exchange)")
 ggsave("figures/ke-accs_voter.png", width=6, height=6)
+
+## MAKE SURE TO SET SAMPLE SIZE FOR CONFIDENCE INTERVALS ##
+sample_size = 50
+span = 0.5
+accs_ke = read.csv("figures/data/ke-accs_voters_icml.csv")
+ggplot(data = accs_ke, mapping=aes(x=n_voters)) +
+  geom_point(aes(y=acc_gold), color=primary_light_ke) +
+  geom_point(aes(y=acc_heuristic), color=secondary_light_ke) +
+  geom_point(aes(y=acc_borda), color=tertiary_light_ke) +
+  geom_ribbon(aes(ymin=acc_gold-1.96*std_gold/sqrt(sample_size), ymax=acc_gold+1.96*std_gold/sqrt(sample_size)), fill=muted, alpha=alpha) +
+  geom_ribbon(aes(ymin=acc_heuristic-1.96*std_heuristic/sqrt(sample_size), ymax=acc_heuristic+1.96*std_heuristic/sqrt(sample_size)), fill=muted, alpha=alpha) +
+  geom_ribbon(aes(ymin=acc_borda-1.96*std_borda/sqrt(sample_size), ymax=acc_borda+1.96*std_borda/sqrt(sample_size)), fill=muted, alpha=alpha) +
+  geom_smooth(aes(y=acc_gold, color=primary_bold_ke), formula=(y~sqrt(x)), se=F, size=0.5, span=span) +
+  geom_smooth(aes(y=acc_heuristic,  color=secondary_ke), formula=(y~sqrt(x)), se=F, size=0.5, span=span) +
+  geom_smooth(aes(y=acc_borda,  color=tertiary_ke), formula=(y~sqrt(x)), se=F, size=0.5, span=span) +
+  scale_color_identity(guide="legend", name="Model trained on", labels=c("Respondent Labels", "Heuristic Labels - Weighted", "Heuristic Labels - Unweighted")) +
+  scale_y_continuous(breaks=round(seq(0.6, 1.0, by=0.05), 2), limits=c(0.625, 0.875)) +
+  theme(legend.position=c(.65, .2), plot.title=element_text(size=7), legend.text=element_text(size=8), legend.title=element_text(size=9)) +
+  labs(y="Accuracy", x="Number of Respondents") +
+  ggtitle("Discriminative Accuracy vs. Number of Respondents (Kidney Exchange)")
+ggsave("figures/ke-accs_voter_icml.png", width=4, height=4)
 
 accs_n = read.csv("figures/data/mm-accs_data.csv")
 alpha = .25
@@ -272,7 +353,7 @@ ggplot(data = accs_n_ke, mapping=aes(x=n_rows)) +
   ggtitle("Discriminative Accuracy vs. Size of Training Set (Kidney Exchange)")
 ggsave("figures/ke-accs_data.png", width=6, height=6)
 
-F####################################################################
+####################################################################
 ## Histograms ##
 L = read.csv("figures/data/mm-density.csv")
 find_density = function(x) {
