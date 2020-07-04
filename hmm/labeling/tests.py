@@ -4,11 +4,7 @@ from .utils import transform_abstract
 import pandas as pd
 
 """
-TODO
-
-write all the test cases by adding example dicts to the sample dataframe
-then go through and manually label with each function for each pairwise comparison
-for each unit test, check the actual output against the gold standard
+A collection of unit tests for the labeling functions in `moralmachine.py` and `kidney_exchange.py`.
 
 intervene => save characters with suffix int
 don't intervene => save characters with suffix noint
@@ -19,6 +15,7 @@ SAVE_NOINT = NOINT = 0
 SAVE_INT = INT = 1
 # abstain
 ABSTAIN = -1
+
 
 class LabelingFunctionTestCase(unittest.TestCase):
 	"""

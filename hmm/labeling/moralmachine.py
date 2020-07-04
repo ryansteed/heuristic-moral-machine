@@ -14,6 +14,7 @@ SAVE_INT = INT = 1
 # abstain
 ABSTAIN = -1
 
+
 @labeling_function()
 def doctors(x):
     """Favor doctors."""
@@ -22,6 +23,7 @@ def doctors(x):
         for suffix in ['noint', 'int']
     ])
     return choose_max(num_doctors)
+
 
 @labeling_function()
 def utilitarian(x):
@@ -32,6 +34,7 @@ def utilitarian(x):
     ])
     return choose_max(max_characters)
 
+
 @labeling_function()
 def utilitarian_anthro(x):
     """Save the most human lives."""
@@ -41,15 +44,18 @@ def utilitarian_anthro(x):
     ])
     return choose_max(max_hoomans)
 
+
 @labeling_function()
 def action(x):
     """Always intervene."""
     return 1
 
+
 @labeling_function()
 def pedestrians(x):
     """Favor pedestrians over passengers. (Always choose the barrier.)"""
     return choose_barrier(x)
+
 
 @labeling_function()
 def females(x):
@@ -59,6 +65,7 @@ def females(x):
         for suf in ["noint", "int"]
     ])
     return choose_max(num_females)
+
 
 @labeling_function()
 def fitness(x):
@@ -70,6 +77,7 @@ def fitness(x):
     ])
     return choose_max(fitness_score)
 
+
 @labeling_function()
 def status(x):
     """Save the most executives."""
@@ -78,6 +86,7 @@ def status(x):
         for suffix in ['noint', 'int']
     ])
     return choose_max(num_rich)
+
 
 @labeling_function()
 def legal(x):
@@ -104,6 +113,7 @@ def legal(x):
             return SAVE_NOINT
     return -1
 
+
 @labeling_function()
 def illegal(x):
     """Save the passengers if the pedestrians are crossing illegally."""
@@ -129,6 +139,7 @@ def illegal(x):
             return 1
     return -1
 
+
 @labeling_function()
 def youth(x):
     """Save the most children."""
@@ -137,6 +148,7 @@ def youth(x):
         for suffix in ['noint', 'int']
     ])
     return choose_max(num_children)
+
 
 @labeling_function()
 def elderly(x):
@@ -147,35 +159,30 @@ def elderly(x):
     ])
     return choose_max(num_elderly)    
 
+
 @labeling_function()
 def criminals(x):
     """If either group consists only of criminals, prefer the other."""
     return select_against_homogenous_group(x, ["Criminal"])
+
 
 @labeling_function()
 def homeless(x):
     """If either group consists only of the homeless, prefer the other."""
     return select_against_homogenous_group(x, ["Homeless"])
 
+
 @labeling_function()
 def pets(x):
     """If either group consists only of pets, prefer the other."""
     return select_against_homogenous_group(x, ["Non-human"])
+
 
 @labeling_function()
 def spare_strollers(x):
     """Spare strollers at all cost."""
     return spare_group(x, ["Infancy"])
 
-# @labeling_function()
-# def spare_girl(x):
-#     """Spare girls at all cost."""
-#     return spare_group(x, ["Girl"])
-
-# @labeling_function()
-# def spare_boy(x):
-#     """Spare boys at all cost."""
-#     return spare_group(x, ["Boy"])
 
 @labeling_function()
 def spare_pregnant(x):

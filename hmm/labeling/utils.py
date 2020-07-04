@@ -12,6 +12,7 @@ characters_abstract = [
     'Non-human'
 ]
 
+
 def choose_max(x):
     """
     Accept a single argmax only; if there is a tie, abstain.
@@ -20,6 +21,7 @@ def choose_max(x):
     """
     if len(np.argwhere(x == np.max(x))) > 1: return -1
     return x.argmax()
+
 
 def choose_barrier(x, reverse=False):
     """
@@ -34,6 +36,7 @@ def choose_barrier(x, reverse=False):
     elif x["Passenger_int"] == 1: return 0 if not reverse else 1
     return -1
 
+
 def count_characters(x, suffix, characters):
     """
     :param suffix: The suffix to use - int or noint
@@ -43,6 +46,7 @@ def count_characters(x, suffix, characters):
     return sum([
         x["{}_{}".format(c, suffix)] for c in characters
     ])
+
 
 def select_against_homogenous_group(x, group):
     """
@@ -57,6 +61,7 @@ def select_against_homogenous_group(x, group):
     if only_group["int"]: return 0
     return -1
 
+
 def spare_group(x, group):
     """
     Never choose an alternative that sacrifices a character in :group:.
@@ -70,16 +75,24 @@ def spare_group(x, group):
     if group_member_present["int"]: return 1
     return -1
 
+
 def is_passenger(df, suf=''):
     return df['Barrier{}'.format(suf)] == 1
+
 
 def is_law_abiding(df, suf=''):
     return df['CrossingSignal{}'.format(suf)] == 1 & ~is_passenger(df, suf=suf)
 
+
 def is_law_violating(df, suf=''):
     return df['CrossingSignal{}'.format(suf)] == 2 & ~is_passenger(df, suf=suf)
 
+
 def transform_abstract(df):
+    """
+    :param df: dataframe of raw character vectors
+    :return: dataframe of abstract moral vectors
+    """
     A_cols = ["Intervention"] + characters_all + ["Passenger", "Law Abiding", "Law Violating"]
     A_rows = [
         "Intervene", "Male", "Female", "Young", "Old", "Infancy", "Pregnancy", "Fat", "Fit", "Working", "Medical",
@@ -112,6 +125,7 @@ def transform_abstract(df):
     f = A.dot(Theta.transpose())
     df = df.drop(labels=A_cols, axis='columns').join(pd.DataFrame(f.transpose(), columns=A_rows, index=df.index), how='inner')
     return df
+
 
 def pictofy(response, raw=False):
     if raw:
