@@ -151,24 +151,58 @@
 <span class="kn">from</span> <span class="nn">snorkel.utils</span> <span class="kn">import</span> <span class="n">probs_to_preds</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
+
 <div class="viewcode-block" id="Labeler"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler">[docs]</a><span class="k">class</span> <span class="nc">Labeler</span><span class="p">:</span>
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lfs</span><span class="o">=</span><span class="p">[]):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lfs</span><span class="o">=</span><span class="p">[],</span> <span class="n">model</span><span class="o">=</span><span class="n">LabelModel</span><span class="p">(</span><span class="n">cardinality</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Wrapper for Snorkel label model.</span>
+
+<span class="sd">		- addition/change of labeling functions</span>
+<span class="sd">		- label aggregation</span>
+<span class="sd">		- model fitting</span>
+<span class="sd">		- model evaluation: scoring and bucket analysis</span>
+<span class="sd">		- filtering NAs</span>
+
+<span class="sd">		:param lfs: list of labeling functions (heuristic functions)</span>
+<span class="sd">		:param model: the model to use - by default, Snorkel&#39;s generative label model</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">lfs</span> <span class="o">=</span> <span class="n">lfs</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">applier</span> <span class="o">=</span> <span class="n">PandasLFApplier</span><span class="p">(</span><span class="n">lfs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lfs</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LabelModel</span><span class="p">(</span><span class="n">cardinality</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">applier</span> <span class="o">=</span> <span class="n">PandasLFApplier</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
 
 <div class="viewcode-block" id="Labeler.add_lfs"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.add_lfs">[docs]</a>	<span class="k">def</span> <span class="nf">add_lfs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lfs</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Add labeling functions to the model.</span>
+
+<span class="sd">		:param lfs: list of labeling functions to add</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">lfs</span> <span class="o">+=</span> <span class="n">lfs</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">update_applier</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lfs</span><span class="p">)</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">update_applier</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Labeler.set_lfs"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.set_lfs">[docs]</a>	<span class="k">def</span> <span class="nf">set_lfs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lfs</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">lfs</span> <span class="o">=</span> <span class="n">lfs</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">update_applier</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lfs</span><span class="p">)</span></div>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the list of labeling functions.</span>
 
-<div class="viewcode-block" id="Labeler.update_applier"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.update_applier">[docs]</a>	<span class="k">def</span> <span class="nf">update_applier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lfs</span><span class="p">):</span>
+<span class="sd">		:param lfs: labeling functions for the model</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">lfs</span> <span class="o">=</span> <span class="n">lfs</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">update_applier</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Labeler.update_applier"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.update_applier">[docs]</a>	<span class="k">def</span> <span class="nf">update_applier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Update the labeling function applier with the labeling functions. The applier is responsible for generating</span>
+<span class="sd">		candidate labels for each tuple in the dataset, one set of candidate labels for each labeling function.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">applier</span> <span class="o">=</span> <span class="n">PandasLFApplier</span><span class="p">(</span><span class="n">lfs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lfs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Labeler.label"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.label">[docs]</a>	<span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Aggregate candidate labels into a single label for each tuple in the dataframes in `data`.</span>
+
+<span class="sd">		:param data: a set of dataframes, each containing a set of tuples to label</span>
+<span class="sd">		:param verbose: whether or not to periodically print label status</span>
+<span class="sd">		:return: a set of labels for each dataframe in `data`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
 			<span class="n">L</span> <span class="o">=</span> <span class="p">[]</span>
 			<span class="k">for</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
@@ -177,9 +211,26 @@
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label_df</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></div>
 
 	<span class="k">def</span> <span class="nf">_label_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Aggregate candidate labels into a single label for each tuple in the dataframes in `data`.</span>
+
+<span class="sd">		:param X: a set of tuples to label</span>
+<span class="sd">		:param verbose: whether or not to periodically print label status</span>
+<span class="sd">		:return: labels for each tuple in `X`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">applier</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Labeler.fit"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.fit">[docs]</a>	<span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L_train</span><span class="p">,</span> <span class="n">Y_dev</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="p">{}):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Fit the generative label model on a set of labels. No ground-truth labels are required for fitting, but can be</span>
+<span class="sd">		included to help make the automatically generated label distribution match the ground-truth label distribution.</span>
+<span class="sd">		Fitting involves only the candidate label distributions in the training set `L_train`.</span>
+
+<span class="sd">		:param L_train: an `n` x `l` matrix of candidate labels, where `n` is the size of the training dataset and `l` is the number of labeling functions</span>
+<span class="sd">		:param Y_dev: a held-out set of ground-truth labels</span>
+<span class="sd">		:param fit_params: optional set of parameters for fitting - see Snorkel docs for all options</span>
+<span class="sd">		:return: the fitted label model</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_epochs&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span> <span class="s1">&#39;lr&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">001</span><span class="p">,</span> <span class="s1">&#39;log_freq&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;seed&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 		<span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fit_params</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">L_train</span><span class="o">=</span><span class="n">L_train</span><span class="p">,</span> <span class="n">Y_dev</span><span class="o">=</span><span class="n">Y_dev</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
@@ -187,24 +238,61 @@
 
 <div class="viewcode-block" id="Labeler.score"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.score">[docs]</a>	<span class="nd">@staticmethod</span>
 	<span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">L_valid</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Validate the label model on a held out test set.</span>
+
+<span class="sd">		:param model: a label aggregation model</span>
+<span class="sd">		:param L_valid: an `n` x `l` matrix of candidate labels, where `n` is the size of the held-out validation set and `l` is the number of labeling functions</span>
+<span class="sd">		:param y_val: ground-truth labels for the held-out validation set</span>
+<span class="sd">		:param verbose: whether or not to periodically print label status</span>
+<span class="sd">		:return:</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">acc</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="n">L_valid</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">y_val</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">tie_break_policy</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">)[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span>
-		<span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{str(model)} {&#39;Vote Accuracy:&#39;:&lt;25} {acc*100:.1f}&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{str(model)} {&#39;Vote Accuracy:&#39;:&lt;25} {acc*100:.1f}&quot;</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">acc</span></div>
 
-<div class="viewcode-block" id="Labeler.get_preds"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.get_preds">[docs]</a>	<span class="k">def</span> <span class="nf">get_preds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L_dev</span><span class="p">):</span>
-		<span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.5</span>
-		<span class="n">probs_dev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="n">L_dev</span><span class="p">)</span>
+<div class="viewcode-block" id="Labeler.get_preds"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.get_preds">[docs]</a>	<span class="k">def</span> <span class="nf">get_preds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Produce rounded labels from a set of candidate labels produced for some dataset.</span>
+
+<span class="sd">		:param L: an `n` x `l` matrix of candidate labels, where `n` is the size of the dataset and `l` is the number of labeling functions</span>
+<span class="sd">		:param threshold: threshold for rounding posterior probabilities to discrete labels</span>
+<span class="sd">		:return: the rounded labels</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">probs_dev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="n">L</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">probs_dev</span> <span class="o">&gt;=</span> <span class="n">threshold</span></div>
 
 <div class="viewcode-block" id="Labeler.get_label_buckets"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.get_label_buckets">[docs]</a>	<span class="k">def</span> <span class="nf">get_label_buckets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L_dev</span><span class="p">,</span> <span class="n">y_dev</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Fetch a bucket of labels (i.a. false positives, false negatives)</span>
+
+<span class="sd">		:param L_dev: an `n` x `l` matrix of candidate labels, where `n` is the size of the dev dataset and `l` is the number of labeling functions</span>
+<span class="sd">		:param y_dev: ground truth labels for the dev set</span>
+<span class="sd">		:return: a set of bucket labels - see the Moral Machine example for some analyses with label buckets</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">preds_dev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_preds</span><span class="p">(</span><span class="n">L_dev</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">get_label_buckets</span><span class="p">(</span><span class="n">y_dev</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">preds_dev</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Labeler.get_confusion_matrix"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.get_confusion_matrix">[docs]</a>	<span class="k">def</span> <span class="nf">get_confusion_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L_dev</span><span class="p">,</span> <span class="n">y_dev</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Compute the confusion matrix for the final labels for a held out development set.</span>
+
+<span class="sd">		:param L_dev: an `n` x `l` matrix of candidate labels, where `n` is the size of the dev dataset and `l` is the number of labeling functions</span>
+<span class="sd">		:param y_dev: ground truth labels for the dev set</span>
+<span class="sd">		:return: the confusion matrix as a pandas crosstab</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">preds_dev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_preds</span><span class="p">(</span><span class="n">L_dev</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">y_dev</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span> <span class="n">preds_dev</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">rownames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Actual&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Predicted&#39;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Labeler.filter_probs"><a class="viewcode-back" href="../../../hmm.labeling.models.html#hmm.labeling.models.Labeler.filter_probs">[docs]</a>	<span class="k">def</span> <span class="nf">filter_probs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Filter unlabeled rows (where all the labeling functions abstain) from the dataset.</span>
+
+<span class="sd">		:param X: the dataset</span>
+<span class="sd">		:param L: an `n` x `l` matrix of candidate labels, where `n` is the size of the dataset and `l` is the number of labeling functions</span>
+<span class="sd">		:return: the dataset with any unlabeled tuples removed</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">filter_unlabeled_dataframe</span><span class="p">(</span>
 			<span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="n">L</span><span class="p">),</span> <span class="n">L</span><span class="o">=</span><span class="n">L</span>
 		<span class="p">)</span></div>

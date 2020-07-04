@@ -10,16 +10,13 @@ import numpy as np
 
 
 class Classifier:
-	"""
-	A simple classification pipeline wrapping the `sklearn` library.
-
-	- transforms (imputes, encodes/scales) categorical and numerical features
-	- fits a classifier
-	- computes accuracy scores for the classifier
-	"""
 	def __init__(self, num_features, cat_features, clf=RandomForestClassifier(n_estimators=100)):
 		"""
-		Initialize the pipeline.
+		A simple classification pipeline wrapping the `sklearn` library.
+
+		- transforms (imputes, encodes/scales) categorical and numerical features
+		- fits a classifier
+		- computes accuracy scores for the classifier
 
 		:param num_features: a list of df keys for the numerical features
 		:param cat_features: a list of df keys for the categorical features
@@ -48,6 +45,7 @@ class Classifier:
 	def get_clf(self, model):
 		"""
 		Construct the pipeline - a feature preprocessor and a classification model.
+
 		:param model: a classification (discriminative) model
 		:return: a `sklearn` pipeline
 		"""
@@ -59,6 +57,7 @@ class Classifier:
 	def fit(self, X, y):
 		"""
 		Fit the pipeline on a labeled dataset.
+
 		:param X: the data
 		:param y: the ground-truth labels
 		:return: the fitted pipeline
@@ -68,6 +67,7 @@ class Classifier:
 	def score(self, X, y, verbose=True):
 		"""
 		Score the pipeline for accuracy on a test set.
+
 		:param X: the test data
 		:param y: ground-truth labels for the test data
 		:param verbose: whether or not to print test accuracy
@@ -84,6 +84,7 @@ class Classifier:
 	def cross_val(self, X, y, cv=5, verbose=True):
 		"""
 		Cross validate the pipeline.
+
 		:param X: a dataset
 		:param y: the ground-truth labels
 		:param cv: number of folds in the cross validation

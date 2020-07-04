@@ -7,28 +7,27 @@ import pandas as pd
 
 
 class Labeler:
-	"""
-	Wrapper for Snorkel label model.
-
-	- addition/change of labeling functions
-	- label aggregation
-	- model fitting
-	- model evaluation: scoring and bucket analysis
-	- filtering NAs
-	"""
-	def __init__(self, lfs=[], model=None):
+	def __init__(self, lfs=[], model=LabelModel(cardinality=2, verbose=True)):
 		"""
-		Instantiate the wrapper.
+		Wrapper for Snorkel label model.
+
+		- addition/change of labeling functions
+		- label aggregation
+		- model fitting
+		- model evaluation: scoring and bucket analysis
+		- filtering NAs
+
 		:param lfs: list of labeling functions (heuristic functions)
 		:param model: the model to use - by default, Snorkel's generative label model
 		"""
 		self.lfs = lfs
 		self.applier = PandasLFApplier()
-		self.model = LabelModel(cardinality=2, verbose=True) if model is None else model
+		self.model = model
 
 	def add_lfs(self, lfs):
 		"""
 		Add labeling functions to the model.
+
 		:param lfs: list of labeling functions to add
 		"""
 		self.lfs += lfs
@@ -37,6 +36,7 @@ class Labeler:
 	def set_lfs(self, lfs):
 		"""
 		Set the list of labeling functions.
+
 		:param lfs: labeling functions for the model
 		"""
 		self.lfs = lfs
@@ -52,6 +52,7 @@ class Labeler:
 	def label(self, data, verbose=True):
 		"""
 		Aggregate candidate labels into a single label for each tuple in the dataframes in `data`.
+
 		:param data: a set of dataframes, each containing a set of tuples to label
 		:param verbose: whether or not to periodically print label status
 		:return: a set of labels for each dataframe in `data`
@@ -66,6 +67,7 @@ class Labeler:
 	def _label_df(self, X, verbose):
 		"""
 		Aggregate candidate labels into a single label for each tuple in the dataframes in `data`.
+
 		:param X: a set of tuples to label
 		:param verbose: whether or not to periodically print label status
 		:return: labels for each tuple in `X`
@@ -78,8 +80,7 @@ class Labeler:
 		included to help make the automatically generated label distribution match the ground-truth label distribution.
 		Fitting involves only the candidate label distributions in the training set `L_train`.
 
-		:param L_train: an `n` x `l` matrix of candidate labels, where `n` is the size of the training dataset and
-		`l` is the number of labeling functions
+		:param L_train: an `n` x `l` matrix of candidate labels, where `n` is the size of the training dataset and `l` is the number of labeling functions
 		:param Y_dev: a held-out set of ground-truth labels
 		:param fit_params: optional set of parameters for fitting - see Snorkel docs for all options
 		:return: the fitted label model
@@ -95,8 +96,7 @@ class Labeler:
 		Validate the label model on a held out test set.
 
 		:param model: a label aggregation model
-		:param L_valid: an `n` x `l` matrix of candidate labels, where `n` is the size of the held-out validation set and
-		`l` is the number of labeling functions
+		:param L_valid: an `n` x `l` matrix of candidate labels, where `n` is the size of the held-out validation set and `l` is the number of labeling functions
 		:param y_val: ground-truth labels for the held-out validation set
 		:param verbose: whether or not to periodically print label status
 		:return:
@@ -110,8 +110,7 @@ class Labeler:
 		"""
 		Produce rounded labels from a set of candidate labels produced for some dataset.
 
-		:param L: an `n` x `l` matrix of candidate labels, where `n` is the size of the dataset and
-		`l` is the number of labeling functions
+		:param L: an `n` x `l` matrix of candidate labels, where `n` is the size of the dataset and `l` is the number of labeling functions
 		:param threshold: threshold for rounding posterior probabilities to discrete labels
 		:return: the rounded labels
 		"""
@@ -121,8 +120,8 @@ class Labeler:
 	def get_label_buckets(self, L_dev, y_dev):
 		"""
 		Fetch a bucket of labels (i.a. false positives, false negatives)
-		:param L_dev: an `n` x `l` matrix of candidate labels, where `n` is the size of the dev dataset and
-		`l` is the number of labeling functions
+
+		:param L_dev: an `n` x `l` matrix of candidate labels, where `n` is the size of the dev dataset and `l` is the number of labeling functions
 		:param y_dev: ground truth labels for the dev set
 		:return: a set of bucket labels - see the Moral Machine example for some analyses with label buckets
 		"""
@@ -132,8 +131,8 @@ class Labeler:
 	def get_confusion_matrix(self, L_dev, y_dev):
 		"""
 		Compute the confusion matrix for the final labels for a held out development set.
-		:param L_dev: an `n` x `l` matrix of candidate labels, where `n` is the size of the dev dataset and
-		`l` is the number of labeling functions
+
+		:param L_dev: an `n` x `l` matrix of candidate labels, where `n` is the size of the dev dataset and `l` is the number of labeling functions
 		:param y_dev: ground truth labels for the dev set
 		:return: the confusion matrix as a pandas crosstab
 		"""
@@ -143,9 +142,9 @@ class Labeler:
 	def filter_probs(self, X, L):
 		"""
 		Filter unlabeled rows (where all the labeling functions abstain) from the dataset.
+
 		:param X: the dataset
-		:param L:a n `n` x `l` matrix of candidate labels, where `n` is the size of the dataset and
-		`l` is the number of labeling functions
+		:param L: an `n` x `l` matrix of candidate labels, where `n` is the size of the dataset and `l` is the number of labeling functions
 		:return: the dataset with any unlabeled tuples removed
 		"""
 		return filter_unlabeled_dataframe(

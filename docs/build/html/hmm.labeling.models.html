@@ -168,42 +168,139 @@
 <span id="hmm-labeling-models-module"></span><h1>hmm.labeling.models module<a class="headerlink" href="#module-hmm.labeling.models" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="hmm.labeling.models.Labeler">
-<em class="property">class </em><code class="sig-prename descclassname">hmm.labeling.models.</code><code class="sig-name descname">Labeler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lfs</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hmm.labeling.models.</code><code class="sig-name descname">Labeler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lfs</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">model</span><span class="o">=</span><span class="default_value">LabelModel()</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper for Snorkel label model.</p>
+<ul class="simple">
+<li><p>addition/change of labeling functions</p></li>
+<li><p>label aggregation</p></li>
+<li><p>model fitting</p></li>
+<li><p>model evaluation: scoring and bucket analysis</p></li>
+<li><p>filtering NAs</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lfs</strong> – list of labeling functions (heuristic functions)</p></li>
+<li><p><strong>model</strong> – the model to use - by default, Snorkel’s generative label model</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.add_lfs">
 <code class="sig-name descname">add_lfs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lfs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.add_lfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.add_lfs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Add labeling functions to the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lfs</strong> – list of labeling functions to add</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.filter_probs">
 <code class="sig-name descname">filter_probs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">L</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.filter_probs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.filter_probs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Filter unlabeled rows (where all the labeling functions abstain) from the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – the dataset</p></li>
+<li><p><strong>L</strong> – an <cite>n</cite> x <cite>l</cite> matrix of candidate labels, where <cite>n</cite> is the size of the dataset and <cite>l</cite> is the number of labeling functions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the dataset with any unlabeled tuples removed</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.fit">
 <code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">L_train</span></em>, <em class="sig-param"><span class="n">Y_dev</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fit_params</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit the generative label model on a set of labels. No ground-truth labels are required for fitting, but can be
+included to help make the automatically generated label distribution match the ground-truth label distribution.
+Fitting involves only the candidate label distributions in the training set <cite>L_train</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L_train</strong> – an <cite>n</cite> x <cite>l</cite> matrix of candidate labels, where <cite>n</cite> is the size of the training dataset and <cite>l</cite> is the number of labeling functions</p></li>
+<li><p><strong>Y_dev</strong> – a held-out set of ground-truth labels</p></li>
+<li><p><strong>fit_params</strong> – optional set of parameters for fitting - see Snorkel docs for all options</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the fitted label model</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.get_confusion_matrix">
 <code class="sig-name descname">get_confusion_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">L_dev</span></em>, <em class="sig-param"><span class="n">y_dev</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.get_confusion_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.get_confusion_matrix" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compute the confusion matrix for the final labels for a held out development set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L_dev</strong> – an <cite>n</cite> x <cite>l</cite> matrix of candidate labels, where <cite>n</cite> is the size of the dev dataset and <cite>l</cite> is the number of labeling functions</p></li>
+<li><p><strong>y_dev</strong> – ground truth labels for the dev set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the confusion matrix as a pandas crosstab</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.get_label_buckets">
 <code class="sig-name descname">get_label_buckets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">L_dev</span></em>, <em class="sig-param"><span class="n">y_dev</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.get_label_buckets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.get_label_buckets" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fetch a bucket of labels (i.a. false positives, false negatives)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L_dev</strong> – an <cite>n</cite> x <cite>l</cite> matrix of candidate labels, where <cite>n</cite> is the size of the dev dataset and <cite>l</cite> is the number of labeling functions</p></li>
+<li><p><strong>y_dev</strong> – ground truth labels for the dev set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a set of bucket labels - see the Moral Machine example for some analyses with label buckets</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.get_preds">
-<code class="sig-name descname">get_preds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">L_dev</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.get_preds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.get_preds" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">get_preds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">L</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.get_preds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.get_preds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce rounded labels from a set of candidate labels produced for some dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L</strong> – an <cite>n</cite> x <cite>l</cite> matrix of candidate labels, where <cite>n</cite> is the size of the dataset and <cite>l</cite> is the number of labeling functions</p></li>
+<li><p><strong>threshold</strong> – threshold for rounding posterior probabilities to discrete labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the rounded labels</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.label">
 <code class="sig-name descname">label</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.label" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Aggregate candidate labels into a single label for each tuple in the dataframes in <cite>data</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – a set of dataframes, each containing a set of tuples to label</p></li>
+<li><p><strong>verbose</strong> – whether or not to periodically print label status</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a set of labels for each dataframe in <cite>data</cite></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.probs_to_preds">
@@ -213,17 +310,39 @@
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.score">
 <em class="property">static </em><code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">L_valid</span></em>, <em class="sig-param"><span class="n">y_val</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.score" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Validate the label model on a held out test set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – a label aggregation model</p></li>
+<li><p><strong>L_valid</strong> – an <cite>n</cite> x <cite>l</cite> matrix of candidate labels, where <cite>n</cite> is the size of the held-out validation set and <cite>l</cite> is the number of labeling functions</p></li>
+<li><p><strong>y_val</strong> – ground-truth labels for the held-out validation set</p></li>
+<li><p><strong>verbose</strong> – whether or not to periodically print label status</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.set_lfs">
 <code class="sig-name descname">set_lfs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lfs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.set_lfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.set_lfs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set the list of labeling functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lfs</strong> – labeling functions for the model</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.labeling.models.Labeler.update_applier">
-<code class="sig-name descname">update_applier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lfs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.update_applier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.update_applier" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">update_applier</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/labeling/models.html#Labeler.update_applier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.labeling.models.Labeler.update_applier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the labeling function applier with the labeling functions. The applier is responsible for generating
+candidate labels for each tuple in the dataset, one set of candidate labels for each labeling function.</p>
+</dd></dl>
 
 </dd></dl>
 

@@ -165,29 +165,113 @@
 <span id="hmm-classification-module"></span><h1>hmm.classification module<a class="headerlink" href="#module-hmm.classification" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="hmm.classification.Classifier">
-<em class="property">class </em><code class="sig-prename descclassname">hmm.classification.</code><code class="sig-name descname">Classifier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">num_features</span></em>, <em class="sig-param"><span class="n">cat_features</span></em>, <em class="sig-param"><span class="n">clf</span><span class="o">=</span><span class="default_value">RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini', max_depth=None, max_features='auto', max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=None, oob_score=False, random_state=None, verbose=0, warm_start=False)</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/classification.html#Classifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.classification.Classifier" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hmm.classification.</code><code class="sig-name descname">Classifier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_features</span></em>, <em class="sig-param"><span class="n">cat_features</span></em>, <em class="sig-param"><span class="n">clf</span><span class="o">=</span><span class="default_value">RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini', max_depth=None, max_features='auto', max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=None, oob_score=False, random_state=None, verbose=0, warm_start=False)</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/classification.html#Classifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.classification.Classifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A simple classification pipeline wrapping the <cite>sklearn</cite> library.</p>
+<ul class="simple">
+<li><p>transforms (imputes, encodes/scales) categorical and numerical features</p></li>
+<li><p>fits a classifier</p></li>
+<li><p>computes accuracy scores for the classifier</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_features</strong> – a list of df keys for the numerical features</p></li>
+<li><p><strong>cat_features</strong> – a list of df keys for the categorical features</p></li>
+<li><p><strong>clf</strong> – a classification (discriminative) model</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="hmm.classification.Classifier.cross_val">
+<code class="sig-name descname">cross_val</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/classification.html#Classifier.cross_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.classification.Classifier.cross_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cross validate the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – a dataset</p></li>
+<li><p><strong>y</strong> – the ground-truth labels</p></li>
+<li><p><strong>cv</strong> – number of folds in the cross validation</p></li>
+<li><p><strong>verbose</strong> – whether or not to print test accuracy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the cross validation score object (<cite>sklearn</cite>)</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt id="hmm.classification.Classifier.fit">
 <code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/classification.html#Classifier.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.classification.Classifier.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit the pipeline on a labeled dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – the data</p></li>
+<li><p><strong>y</strong> – the ground-truth labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the fitted pipeline</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.classification.Classifier.get_clf">
 <code class="sig-name descname">get_clf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/classification.html#Classifier.get_clf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.classification.Classifier.get_clf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Construct the pipeline - a feature preprocessor and a classification model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> – a classification (discriminative) model</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a <cite>sklearn</cite> pipeline</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hmm.classification.Classifier.score">
 <code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/classification.html#Classifier.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.classification.Classifier.score" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Score the pipeline for accuracy on a test set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – the test data</p></li>
+<li><p><strong>y</strong> – ground-truth labels for the test data</p></li>
+<li><p><strong>verbose</strong> – whether or not to print test accuracy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>accuracy on the test set</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt id="hmm.classification.train_test_val_dev_split">
 <code class="sig-prename descclassname">hmm.classification.</code><code class="sig-name descname">train_test_val_dev_split</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hmm/classification.html#train_test_val_dev_split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hmm.classification.train_test_val_dev_split" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Split the dataset into four partitions: training (64%), testing (16%), validation (16%), and development (4%).
+- Training is for fitting the model.
+- Testing is for testing the fitted model and parameter tuning.
+- Validation is for final testing after tuning parameters.
+- Development is for examining individual rows and performing unit tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – the dataset</p></li>
+<li><p><strong>y</strong> – the ground-truth labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>four partitions of the dataset</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 
