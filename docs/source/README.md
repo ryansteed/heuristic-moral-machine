@@ -1,9 +1,11 @@
 Heuristic Moral Machine Project
 ================================
 
-**Heuristic-Based Weak Learning for Moral Decision-Making**
+**Heuristic-Based Weak Learning for Automated Decision-Making**
 
-Attempting to train moral algorithms with ethical/legal heuristic functions to build more ethical systems.
+> Presented at [PAML @ ICML 2020](https://participatoryml.github.io/).
+
+Training ML decision-making systems with heuristics to lower the barrier to stakeholder participation in algorithm design/governance.
 
 Author: Ryan Steed
 
@@ -11,8 +13,7 @@ View the data & code on [Github](https://github.com/ryansteed/heuristic-moral-ma
 
 ## Description
 
-This repo contains a software package for training and evaluating a moral decision-making algorithm for two use cases: 
-the autonomous vehicle trolley problem and the kidney exchange.
+This repo contains a software package for training and evaluating a decision-making algorithm for two use cases with pairwise moral preference data: the autonomous vehicle trolley problem and the kidney exchange.
 
 `hmm` is a Python package for automatically labeling moral scenarios in these two domains. `hmm/labeling`
 contains custom heuristic labeling functions, along with unit tests. `hmm/labeling/models.py` contains a wrapper for the 

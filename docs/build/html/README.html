@@ -159,14 +159,16 @@
             
   <div class="section" id="heuristic-moral-machine-project">
 <h1>Heuristic Moral Machine Project<a class="headerlink" href="#heuristic-moral-machine-project" title="Permalink to this headline">¶</a></h1>
-<p><strong>Heuristic-Based Weak Learning for Moral Decision-Making</strong></p>
-<p>Attempting to train moral algorithms with ethical/legal heuristic functions to build more ethical systems.</p>
+<p><strong>Heuristic-Based Weak Learning for Automated Decision-Making</strong></p>
+<blockquote>
+<div><p>Presented at <a class="reference external" href="https://participatoryml.github.io/">PAML &#64; ICML 2020</a>.</p>
+</div></blockquote>
+<p>Training ML decision-making systems with heuristics to lower the barrier to stakeholder participation in algorithm design/governance.</p>
 <p>Author: Ryan Steed</p>
 <p>View the data &amp; code on <a class="reference external" href="https://github.com/ryansteed/heuristic-moral-machine">Github</a>.</p>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>This repo contains a software package for training and evaluating a moral decision-making algorithm for two use cases:
-the autonomous vehicle trolley problem and the kidney exchange.</p>
+<p>This repo contains a software package for training and evaluating a decision-making algorithm for two use cases with pairwise moral preference data: the autonomous vehicle trolley problem and the kidney exchange.</p>
 <p><code class="docutils literal notranslate"><span class="pre">hmm</span></code> is a Python package for automatically labeling moral scenarios in these two domains. <code class="docutils literal notranslate"><span class="pre">hmm/labeling</span></code>
 contains custom heuristic labeling functions, along with unit tests. <code class="docutils literal notranslate"><span class="pre">hmm/labeling/models.py</span></code> contains a wrapper for the
 <a class="reference external" href="https://www.snorkel.org/">Snorkel</a> generative label model. <code class="docutils literal notranslate"><span class="pre">hmm/classification.py</span></code> contains a discriminative model for
