@@ -46,9 +46,9 @@ def utilitarian_anthro(x):
 
 
 @labeling_function()
-def action(x):
-    """Always intervene."""
-    return 1
+def inaction(x):
+    """Never intervene."""
+    return 0
 
 
 @labeling_function()
