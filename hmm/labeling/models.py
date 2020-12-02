@@ -21,7 +21,7 @@ class Labeler:
 		:param model: the model to use - by default, Snorkel's generative label model
 		"""
 		self.lfs = lfs
-		self.applier = PandasLFApplier()
+		self.applier = PandasLFApplier(lfs=self.lfs)
 		self.model = model
 
 	def add_lfs(self, lfs):
