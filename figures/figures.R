@@ -3,7 +3,6 @@ library(tidyverse)
 library(ggrepel)
 library(dplyr)
 library(tidyr)
-library(repurrrsive)
 
 primary_bold = "#1f78b4"
 primary_bold_ke = "#1b9e77"
@@ -26,7 +25,7 @@ format_lf_name = function(d) {
   if (x == "utilitarian anthro") return("utilitarian (human)")
   if (x %in% c("youth", "doctors", "females", "elderly")) return(paste("save", x))
   if (x %in% c("pets", "homeless", "criminals")) return(paste("sacrifice", x))
-  if (x=="action") return("always intervene")
+  if (x=="inaction") return("never intervene")
   if (x=="status") return("favor executives")
   if (x=="legal") return("favor legal crossing")
   if (x=="illegal") return("disfavor illegal crossing")
